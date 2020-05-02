@@ -1,0 +1,13 @@
+overload~=1.1
+requests~=2.23.0
+inputs~=0.5
+opensimplex~=0.2
+PyYAML~=5.3.1
+fastutils~=0.10.0
+pyglet~=1.5.4
+Pillow~=7.1.2
+future~=0.18.2
+wxPython~=4.1.0
+pyGoogleSearch~=2.5
+Deprecated~=1.2.9
+setuptools~=46.1.3

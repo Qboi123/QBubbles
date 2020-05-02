@@ -1,0 +1,87 @@
+# Store text
+store.diamonds: "Diamants: "
+store.coins: "Monnaie: "
+
+# Home Menu
+home.start: "DÉBUT"
+home.quit: "QUITTER"
+home.options: "OPTIONS"
+
+# Pause Menu
+pause.back-to-home: "Sauvegarder et revenir au menu principal"
+
+# Slots Menu
+slots.open: "Open"
+slots.rename: "Rename"
+slots.remove: "Delete"
+slots.add: "New"
+slots.reset: "Reset"
+
+# Options
+options.language: "Language"
+options.name: "Franch"
+options.save: "Save"
+
+# Items
+item.unlck_lvl: "Débloquer le niveau"
+item.teleport: "Téléporteur"
+item.protect: "Bouclier"
+item.diamond: "Diamant"
+item.extra_life: "Vie supplémentaire"
+item.pop3bubs: "Pop 3 bulles"
+item.two_extlives: "2 vies supplémentaires"
+item.spdboost: "Turbo"
+item.ultamode: "Mode ultra"
+item.double_pnt: "Double score"
+item.plus10: "+10 points"
+item.plus100: "+100 points"
+item.plus200: "+200 points"
+item.plus500: "+500 points"
+
+# Bubbles
+bubble.state.shotspdstate: "Munitions rapide"
+bubble.state.specialkey: "Statut spécial"
+bubble.state.slowmotion: "Ralenti"
+bubble.state.confusion: "Désordre"
+bubble.state.timebreak: "Pause de temps"
+bubble.state.hypermode: "Mode hyper"
+bubble.state.ultimate: "Ultime bulle"
+bubble.state.paralyse: "Raidissement"
+bubble.state.notouch: "Statut spirituel"
+bubble.state.protect: "Bouclier"
+bubble.state.double: "2x statut"
+bubble.state.triple: "3x statut"
+bubble.stonebubble: "Bulle de pierre"
+bubble.teleporter: "Téléporteur"
+bubble.speeddown: "Ralentir"
+bubble.levelkey: "Clé de niveau"
+bubble.present: "Cadeau"
+bubble.diamond: "Diamant"
+bubble.speedup: "Accélérer"
+bubble.normal: "Bulle normale"
+bubble.double: "Double bulle"
+bubble.triple: "Triple bulle"
+bubble.coin: "Monnaie"
+bubble.kill: "-1 vie"
+bubble.up: "Vie supplémentaire"
+
+# Popups
+popup.levelup: "Level"
+
+# Infos
+info.state.slowmotion: "Ralenti"
+info.state.shotspeed: "Vitesse des munitions"
+info.state.confusion: "Désordre"
+info.state.timebreak: "Pause de temps"
+info.state.spdboost: "Turbo"
+info.state.protect: "Stat. Bouclier"
+info.state.notouch: "Stat. spirituel"
+info.state.paralyse: "Raidissement"
+info.state.score: "Stat. score"
+info.diamonds: "Diamants"
+info.speed: "La vitesse"
+info.coins: "Monnaie"
+info.lives: "Vies"
+info.score: "Points"
+info.level: "Niveau"
+info.tps: "Téléports"

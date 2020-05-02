@@ -1,0 +1,328 @@
+QAccentButton:
+  configure:
+    font: ["Helvetica", 10]
+    padding: 1
+  map:
+    relief:
+      pressed: flat
+      active: flat
+      focus: flat
+      disabled: flat
+      "!disabled": flat
+    background:
+      pressed: %(accentdark)s
+      active: %(accentlight)s
+      focus: %(accentlight)s
+      disabled: "#7f7f7f"
+      "!disabled": %(accent)s
+    bordercolor:
+      pressed: %(accentdark)s
+      active: %(accentlight)s
+      focus: %(accentlight)s
+      disabled: "#7f7f7f"
+      "!disabled": %(accent)s
+    foreground:
+      pressed: white
+      active: white
+      focus: white
+      disabled: "#3f3f3f"
+      "!disabled": white
+TButton:
+  configure:
+    font: ["Helvetica", 10]
+    padding: 1
+  map:
+    relief:
+      pressed: flat
+      active: flat
+      focus: flat
+      disabled: flat
+      "!disabled": flat
+    background:
+      pressed: %(accentdark)s
+      active: %(accent)s
+      focus: "#4f4f4f"
+      disabled: "#7f7f7f"
+      "!disabled": "#4f4f4f"
+    bordercolor:
+      pressed: "#2f2f2f"
+      active: "#575757"
+      focus: "#3f3f3f"
+      disabled: "#7f7f7f"
+      "!disabled": "#3f3f3f"
+    foreground:
+      pressed: white
+      active: white
+      focus: white
+      disabled: "#3f3f3f"
+      "!disabled": white
+TCombobox:
+  configure:
+    padding: 2
+    arrowsize: 15
+    postoffset: 0
+  map:
+    arrowcolor:
+      pressed: white
+      active: white
+      focus: white
+      disabled: "#7f7f7f"
+      "!disabled": white
+    bordercolor:
+      active: %(accent)s
+      focus: %(accent)s
+      disabled: %(accent)s
+      "!disabled": %(accent)s
+    background:
+      pressed: %(accentlight)s
+      active: %(accent)s
+      focus: %(accent)s
+      disabled: "#7f7f7f"
+      "!disabled": "#676767"
+    fieldbackground:
+      active: "#5f5f5f"
+      focus: "#f7f7f7"
+      disabled: "#6f6f6f"
+      "!disabled": "#4f4f4f"
+    foreground:
+      active: white
+      focus: white
+      disabled: "#afafaf"
+      "!disabled": white
+    selectbackground:
+      active: %(accentlight)s
+      focus: %(accentlight)s
+      disabled: "#7f7f7f"
+      "!disabled": %(accent)s
+ComboboxPopdownFrame:
+  configure:
+    relief: flat
+    borderwidth: 0
+TRadiobutton:
+  configure:
+    padding: 8
+    indicatormargin: 2
+  map:
+    background:
+      pressed: "#3f3f3f"
+      active: "#3f3f3f"
+      focus: "#3f3f3f"
+      alternate: "#3f3f3f"
+      readonly: "#3f3f3f"
+      disabled: "#3f3f3f"
+      selected: "#3f3f3f"
+      "!disabled": "#3f3f3f"
+    foreground:
+      pressed: white
+      active: white
+      focus: white
+      alternate: white
+      readonly: white
+      disabled: white
+      selected: white
+      "!disabled": white
+    indicatorcolor:
+      selected: %(accentlight)s
+      "!selected": %(accentdark)s
+      pressed: %(accentdark)s
+      alternate: %(accent)s
+      active: "#5f5f5f"
+      focus: "#5f5f5f"
+      readonly: "#7f7f7f"
+      disabled: "#7f7f7f"
+      "!disabled": "#4f4f4f"
+    indicatorbackground:
+      pressed: white
+      active: white
+      focus: white
+      alternate: white
+      readonly: white
+      disabled: white
+      selected: white
+      "!disabled": white
+    indicatorrelief:
+      pressed: flat
+      active: flat
+      focus: flat
+      alternate: flat
+      readonly: flat
+      disabled: flat
+      selected: flat
+      "!disabled": flat
+TCheckbutton:
+  configure:
+    padding: 8
+    indicatormargin: 2
+  map:
+    background:
+      pressed: "#3f3f3f"
+      active: "#3f3f3f"
+      focus: "#3f3f3f"
+      alternate: "#3f3f3f"
+      readonly: "#3f3f3f"
+      disabled: "#3f3f3f"
+      selected: "#3f3f3f"
+      "!disabled": "#3f3f3f"
+    foreground:
+      pressed: white
+      active: white
+      focus: white
+      alternate: white
+      readonly: white
+      disabled: white
+      selected: white
+      "!disabled": white
+    indicatorcolor:
+      selected: %(accentlight)s
+      "!selected": %(accentdark)s
+      pressed: %(accentdark)s
+      alternate: %(accent)s
+      active: "#5f5f5f"
+      focus: "#5f5f5f"
+      readonly: "#7f7f7f"
+      disabled: "#7f7f7f"
+      "!disabled": "#4f4f4f"
+    indicatorbackground:
+      pressed: white
+      active: white
+      focus: white
+      alternate: white
+      readonly: white
+      disabled: white
+      selected: white
+      "!disabled": white
+    indicatorrelief:
+      pressed: flat
+      active: flat
+      focus: flat
+      alternate: flat
+      readonly: flat
+      disabled: flat
+      selected: flat
+      "!disabled": flat
+Treeview:
+  configure:
+    padding: 0
+    font: ["helvetica", 10]
+    relief: flat
+    border: 0
+    rowheight: 24
+  map:
+    background:
+      disabled: "#7f7f7f"
+      active: %(accent)s
+      selected: %(accent)s
+      focus: %(accentlight)s
+      "!disabled": "#2f2f2f"
+    fieldbackground:
+      disabled: "#7f7f7f"
+      active: "#4f4f4f"
+      selected: "#4f4f4f"
+      focus: "#5f5f5f"
+      "!disabled": "#2f2f2f"
+    foreground:
+      disabled: "#afafaf"
+      active: white
+      selected: white
+      focus: white
+      "!disabled": white
+    relief:
+      disabled: flat
+      focus: flat
+      active: flat
+      "!disabled": flat
+Treeview.Item:
+  configure:
+    padding: 0
+    indicatorsize: 10
+  map:
+    foreground:
+      disabled: "#afafaf"
+      selected: %(accent)s
+      active: %(accent)s
+      focus: white
+      "!disabled": %(accent)s
+Treeview.Cell:
+  configure:
+    padding: 0
+  map:
+    background:
+      disabled: "#7f7f7f"
+      active: %(accent)s
+      selected: %(accent)s
+      "!disabled": %(accent)s
+      "!selected": %(accent)s
+    fieldbackground:
+      disabled: "#7f7f7f"
+      selected: %(accent)s
+      active: %(accent)s
+      "!disabled": %(accent)s
+      "!selected": %(accent)s
+    foreground:
+      disabled: "#afafaf"
+      focus: white
+      selected: white
+      "!disabled": white
+      "!selected": white
+    relief:
+      disabled: flat
+      selected: flat
+      focus: flat
+      active: flat
+      "!disabled": flat
+      "!selected": flat
+Treeview.Heading:
+  configure:
+    padding: 0
+    font: ["helvetica", 10]
+  map:
+    background:
+      disabled: "#8f8f8f"
+      active: "#6f6f6f"
+      selected: "#6f6f6f"
+      "!disabled": "#4f4f4f"
+      "!selected": "#4f4f4f"
+    fieldbackground:
+      disabled: "#7f7f7f"
+      selected: %(accent)s
+      active: %(accent)s
+      "!disabled": %(accent)s
+      "!selected": %(accent)s
+    relief:
+      disabled: flat
+      selected: flat
+      focus: flat
+      active: flat
+      "!disabled": flat
+      "!selected": flat
+TLabel:
+  configure:
+    font: ["Helvetica", 10]
+    background: "#3f3f3f"
+    foreground: "#dfdfdf"
+QInnerLabel:
+  configure:
+    font: ["Helvetica", 10]
+    background: "#2f2f2f"
+    foreground: "#cfcfcf"
+TProgressbar:
+  configure:
+    background: %(accent)s
+    bordercolor: %(accent)s
+    troughcolor: "#4f4f4f"
+TFrame:
+  configure:
+    relief: flat
+    background: "#3f3f3f"
+QScrollableFrame:
+  configure:
+    relief: flat
+    background: "#2f2f2f"
+QCanvasList:
+  configure:
+    relief: flat
+    background: "#2f2f2f"
+QScrollableFrame.Inner:
+  configure:
+    relief: flat
+    background: "#2f2f2f"

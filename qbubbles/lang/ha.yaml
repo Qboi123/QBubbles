@@ -1,0 +1,87 @@
+# Store text
+store.diamonds: "다이아몬드: "
+store.coins: "동전: "
+
+# Home Menu
+home.start: "스타트"
+home.quit: "떠나다"
+home.options: "옵션"
+
+# Pause Menu
+pause.back-to-home: "저장하고 집으로 돌아 가기"
+
+# Slots Menu
+slots.open: "열다"
+slots.rename: "이름 바꾸기"
+slots.remove: "지우다"
+slots.add: "새로운"
+slots.reset: "Reset"
+
+# Options
+options.language: "언어"
+options.name: "한국어"
+options.save: "구하다"
+
+# Items
+item.unlck_lvl: "레벨 잠금 해제"
+item.teleport: "텔레 포터"
+item.protect: "방패"
+item.diamond: "다이아몬드"
+item.extra_life: "여분의 생명"
+item.pop3bubs: "팝 3 거품"
+item.two_extlives: "2 여분의 삶"
+item.spdboost: "터보 부스트"
+item.ultamode: "울트라 모드"
+item.double_pnt: "이중 점수 주"
+item.plus10: "점수 10 점"
+item.plus100: "점수 100 점"
+item.plus200: "점수 200 점"
+item.plus500: "점수 500 점"
+
+# Bubbles
+bubble.state.shotspdstate: "빠른 촬영"
+bubble.state.specialkey: "특별 주"
+bubble.state.slowmotion: "느린"
+bubble.state.confusion: "혼동"
+bubble.state.timebreak: "버블 타임 휴식"
+bubble.state.hypermode: "하이퍼 모드"
+bubble.state.ultimate: "궁극의 기포"
+bubble.state.paralyse: "팔라리스"
+bubble.state.notouch: "유령 모드"
+bubble.state.protect: "방패"
+bubble.state.double: "이중 상태"
+bubble.state.triple: "트리플 상태"
+bubble.stonebubble: "스톤 버블"
+bubble.teleporter: "텔레 포터"
+bubble.speeddown: "속도를 줄이다"
+bubble.levelkey: "레벨 키"
+bubble.present: "선물"
+bubble.diamond: "다이아몬드"
+bubble.speedup: "속도를 올리다"
+bubble.normal: "정상 거품"
+bubble.double: "이중 값 버블"
+bubble.triple: "트리플 밸류 버블"
+bubble.coin: "동전"
+bubble.kill: "-1 인생"
+bubble.up: "여분의 생명"
+
+# Popups
+popup.levelup: "수평 "
+
+# Infos
+info.state.slowmotion: "느린"
+info.state.shotspeed: "탄약 속도"
+info.state.confusion: "혼동"
+info.state.timebreak: "버블 일시 중지"
+info.state.spdboost: "터보"
+info.state.protect: "실드 상태"
+info.state.notouch: "유령 모드"
+info.state.paralyse: "팔라리스"
+info.state.score: "점수 상태"
+info.diamonds: "다이아 패 한 벌"
+info.speed: "속도"
+info.coins: "동전"
+info.lives: "삶"
+info.score: "점수"
+info.level: "수평"
+info.tps: "순간 이동"

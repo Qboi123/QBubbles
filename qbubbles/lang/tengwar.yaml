@@ -1,0 +1,87 @@
+# Store text
+store.diamonds: "2`B`Ct2P^8"
+store.coins: "zhY5_ ˆ"
+
+# Home Menu
+home.start: "816E1"
+home.quit: "zé1T"
+home.options: "qY1`B5^_"
+
+# Pause Menu
+pause.back-to-home: "8r#È 2ÈP x`N wzE' 1} 9t^È"
+
+# Slots Menu
+slots.open: "qY5$"
+slots.rename: "75$t#È"
+slots.remove: "2j$1RÉ"
+slots.add: "5yR"
+slots.reset: "Reset"
+
+# Options
+options.language: "jb#`M`CxÈ"
+options.name: "1b$y6E"
+options.save: "8r#È"
+
+# Items
+item.unlck_lvl: "5&amp;jzY' jr$j$"
+item.teleport: "1j$qR6Y16R"
+item.protect: "d`Bj$2"
+item.diamond: "2`B`Ct2P^"
+item.extra_life: "zR|17`C jeGÊ"
+item.pop3bubs: "qqY ó ww&amp;&quot;jL_"
+item.two_extlives: "ò zR|17`C jr%È_"
+item.spdboost: "16Uw`N w`NiY1"
+item.ultamode: "j&amp;17`C t2^È"
+item.double_pnt: "2yYwjL 8z6YÉ"
+item.plus10: "2&quot;#ñð qhY1p8"
+item.plus100: "2&quot;#ñðð qhY1p8"
+item.plus200: "2&quot;#òðð qhY1p8"
+item.plus500: "2&quot;#õðð qhY1p8"
+
+# Bubbles
+bubble.state.shotspdstate: "eiE1 d`N1Yb%"
+bubble.state.specialkey: "j&amp;17`C t2^È"
+bubble.state.slowmotion: "8jyY t1Y`B5^"
+bubble.state.confusion: "zx#{"
+bubble.state.timebreak: "T2yE6"
+bubble.state.hypermode: "9qÕ6R t2^`V"
+bubble.state.ultimate: "j&amp;1t%1E`V ww&amp;wj`V"
+bubble.state.paralyse: "q7Ej#iT"
+bubble.state.notouch: "`Nr% t2^`V"
+bubble.state.protect: "89`Bj$2"
+bubble.state.double: "ò 811E`V"
+bubble.state.triple: "ó 811E`V"
+bubble.stonebubble: "815^`V ww&amp;wj`V"
+bubble.teleporter: "1j$qR7Y16R"
+bubble.speeddown: "8jyY2yY5"
+bubble.levelkey: "jr$j$ z`V`×"
+bubble.present: "5#{"
+bubble.diamond: "2`Bt#2{^"
+bubble.speedup: "8q~V2 qU"
+bubble.normal: "3D5#Ì"
+bubble.double: "ò rj#`M`V"
+bubble.triple: "ó rj#`M`V"
+bubble.coin: "q3D[x%"
+bubble.kill: "\\ñ jeG`V"
+bubble.up: "1R7`C jeG`V"
+
+# Popups
+popup.levelup: "jr$j$ˆ "
+
+# Infos
+info.state.slowmotion: "8jyYt1Y`B5^"
+info.state.shotspeed: "t#{`N 8q~V2"
+info.state.confusion: "zx#{"
+info.state.timebreak: "1t%w$7`VzE"
+info.state.spdboost: "17Uw`N"
+info.state.protect: "89`Bj$2 811E`V"
+info.state.notouch: "`Nr% t2^`V"
+info.state.paralyse: "q7Ej#iT"
+info.state.score: "8z7Y`V 811E`V"
+info.diamonds: "2`Bt#2{^8"
+info.speed: "7Y3H"
+info.coins: "z`Ni[T"
+info.lives: "w2^t#7iY"
+info.score: "8z7Y`V"
+info.level: "jr$j$"
+info.tps: "1j$qR7Y18"

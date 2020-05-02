@@ -1,0 +1,90 @@
+# Store text
+store.diamonds: "Diamanten: "
+store.coins: "Munten: "
+
+# Home Menu
+home.start: "START"
+home.quit: "SLUITEN"
+home.options: "OPTIES"
+
+# Game maps:
+gamemap.classic_map.name: "Oude game type"
+
+# Pause Menu
+pause.back-to-home: "Opslaan en terug naar hoodfdmenu"
+
+# Slots Menu
+slots.open: "Open"
+slots.rename: "Hernoem"
+slots.remove: "Verwijder"
+slots.add: "Nieuw"
+slots.reset: "Reset"
+
+# Options
+options.language: "Taal"
+options.name: "Nederlands"
+options.save: "Opslaan"
+
+# Items
+item.unlck_lvl: "Level-up"
+item.teleport: "Teleporter"
+item.protect: "Schild"
+item.diamond: "Diamant"
+item.extra_life: "Extra leven"
+item.pop3bubs: "Knap 3 bubbels"
+item.two_extlives: "2 extra levens"
+item.spdboost: "Turbo boost."
+item.ultamode: "Ultra modus"
+item.double_pnt: "Dubbele score"
+item.plus10: "+10 punten"
+item.plus100: "+100 punten"
+item.plus200: "+200 punten"
+item.plus500: "+500 punten"
+
+# Bubbles
+bubble.state.shotspdstate: "Snel schieten"
+bubble.state.specialkey: "Speciale status"
+bubble.state.slowmotion: "Slow Motion"
+bubble.state.confusion: "Verwarring"
+bubble.state.timebreak: "Tijd-stop"
+bubble.state.hypermode: "Hyper modus"
+bubble.state.ultimate: "Ultime bubbel"
+bubble.state.paralyse: "Verstijving"
+bubble.state.notouch: "Geest stat"
+bubble.state.protect: "Schild"
+bubble.state.double: "2x status"
+bubble.state.triple: "3x status"
+bubble.stonebubble: "Steen bubbel"
+bubble.teleporter: "Teleporter"
+bubble.speeddown: "Traagheid"
+bubble.levelkey: "Level sleutel"
+bubble.present: "Cadeautje"
+bubble.diamond: "Diamant"
+bubble.speedup: "Snelheid"
+bubble.normal: "Normale bubbel"
+bubble.double: "Dubbel score"
+bubble.triple: "Driedubbel"
+bubble.coin: "Munt"
+bubble.kill: "-1 leven"
+bubble.up: "Extra leven"
+
+# Popups
+popup.levelup: "Level "
+
+# Infos
+info.state.slowmotion: "Slowmotion"
+info.state.shotspeed: "Schiet snelh."
+info.state.confusion: "Verwarring"
+info.state.timebreak: "Timebreak"
+info.state.spdboost: "Turbo"
+info.state.protect: "Schild stat."
+info.state.notouch: "Geest stat."
+info.state.paralyse: "Verstijv."
+info.state.score: "Score stat."
+info.diamonds: "Diamanten"
+info.speed: "Snelheid"
+info.coins: "Munten"
+info.lives: "Levens"
+info.score: "Score"
+info.level: "Level"
+info.tps: "Teleports"

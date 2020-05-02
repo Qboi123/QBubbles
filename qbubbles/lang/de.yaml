@@ -1,0 +1,87 @@
+# Store text
+store.diamonds: "Diamanten: "
+store.coins: "Münzen: "
+
+# Home Menu
+home.start: "START"
+home.quit: "VERLASSEN"
+home.options: "OPTIONEN"
+
+# Pause Menu
+pause.back-to-home: "Speichern und zurück zum Hauptmenü"
+
+# Slots Menu
+slots.open: "Öffnen"
+slots.rename: "Umbenennen"
+slots.remove: "Löschen"
+slots.add: "Neu"
+slots.reset: "Reset"
+
+# Options
+options.language: "Language"
+options.name: "Deutch"
+options.save: "Save"
+
+# Items
+item.unlck_lvl: "Level freischalten"
+item.teleport: "Teleporter"
+item.protect: "Schild"
+item.diamond: "Diamant"
+item.extra_life: "Extra Leben"
+item.pop3bubs: "Pop 3 Blasen"
+item.two_extlives: "2 extra Leben"
+item.spdboost: "Turbo Schub"
+item.ultamode: "Ultra-Modus"
+item.double_pnt: "Doppelte Punktzahl"
+item.plus10: "+10 Punkte"
+item.plus100: "+100 Puntke"
+item.plus200: "+200 Puntke"
+item.plus500: "+500 Puntke"
+
+# Bubbles
+bubble.state.shotspdstate: "Schnelles Schießen"
+bubble.state.specialkey: "Sonderzustand"
+bubble.state.slowmotion: "Zeitlupe"
+bubble.state.confusion: "Wirrwarr"
+bubble.state.timebreak: "Zeitpause"
+bubble.state.hypermode: "Hyper-Modus"
+bubble.state.ultimate: "Ultimative Blase"
+bubble.state.paralyse: "Versteifung"
+bubble.state.notouch: "Geistmodus"
+bubble.state.protect: "Schild"
+bubble.state.double: "2x Zustand"
+bubble.state.triple: "3x Zustand"
+bubble.stonebubble: "Steinblase"
+bubble.teleporter: "Warp Blase"
+bubble.speeddown: "Langsamkeit"
+bubble.levelkey: "Level-taste"
+bubble.present: "Geschenk"
+bubble.diamond: "Diamant"
+bubble.speedup: "Schneller"
+bubble.normal: "Normale Blase"
+bubble.double: "Doppelte Blase"
+bubble.triple: "Dreifache Blase"
+bubble.coin: "Münze"
+bubble.kill: "Mörder"
+bubble.up: "Extra Leben"
+
+# Popups
+popup.levelup: "Niveau "
+
+# Infos
+info.state.slowmotion: "Zeitlupe"
+info.state.shotspeed: "Munitionsgeschwindigkeit"
+info.state.confusion: "Wirrwarr"
+info.state.timebreak: "Zeitpause"
+info.state.spdboost: "Turbo Schub"
+info.state.protect: "Schild"
+info.state.notouch: "Geistmodus"
+info.state.paralyse: "Versteifung"
+info.state.score: "Puntke stat."
+info.diamonds: "Diamanten"
+info.speed: "Geschwindigkeit"
+info.coins: "Münzen"
+info.lives: "Leben"
+info.score: "Puntke"
+info.level: "Niveau"
+info.tps: "Warps"

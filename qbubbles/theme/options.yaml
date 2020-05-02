@@ -1,0 +1,6 @@
+TCombobox.Listbox:
+  background: "#3f3f3f"
+  foreground: "white"
+  selectBackground: %(accent)s
+  selectForeground: white
+  font: [helvetica, 10]

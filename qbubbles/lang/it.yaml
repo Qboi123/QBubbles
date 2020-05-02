@@ -1,0 +1,87 @@
+# Store text
+store.diamonds: "Diamanti: "
+store.coins: "Monete:: "
+
+# Home Menu
+home.start: "INIZIO"
+home.quit: "SMETTERE"
+home.options: "OPZIONI"
+
+# Pause Menu
+pause.back-to-home: "Salva e torna al menu principale"
+
+# Slots Menu
+slots.open: "Apri"
+slots.rename: "Rinominare"
+slots.remove: "Elimina"
+slots.add: "Nuovo"
+slots.reset: "Reset"
+
+# Options
+options.language: "Linguaggio"
+options.name: "Italiana"
+options.save: "Preservare"
+
+# Items
+item.unlck_lvl: "Livello di sblocco"
+item.teleport: "Teletrasporto"
+item.protect: "Scudo"
+item.diamond: "Diamante"
+item.extra_life: "Vita extra"
+item.pop3bubs: "Belle 3 bolle"
+item.two_extlives: "2 vite extra"
+item.spdboost: "Aumento di velocità"
+item.ultamode: "Ultra stato"
+item.double_pnt: "2x valore di bolla"
+item.plus10: "+10 punti"
+item.plus100: "+100 punti"
+item.plus200: "+200 punti"
+item.plus500: "+500 punti"
+
+# Bubbles
+bubble.state.shotspdstate: "Scatto veloce"
+bubble.state.specialkey: "Stato speciale"
+bubble.state.slowmotion: "Rallentatore"
+bubble.state.confusion: "Confusione"
+bubble.state.timebreak: "Pause bolle"
+bubble.state.hypermode: "Modalità Hyper"
+bubble.state.ultimate: "Bolla ultimo"
+bubble.state.paralyse: "Stiffening"
+bubble.state.notouch: "Modalità fantasma"
+bubble.state.protect: "Scudo"
+bubble.state.double: "Stato 2x"
+bubble.state.triple: "Stato 3x"
+bubble.stonebubble: "Bolla di pietra"
+bubble.teleporter: "Teletrasporto"
+bubble.speeddown: "Rallenta"
+bubble.levelkey: "Chiave di livello"
+bubble.present: "Regalo"
+bubble.diamond: "Diamante"
+bubble.speedup: "Accelerare"
+bubble.normal: "Bolla normale"
+bubble.double: "Doppio valore"
+bubble.triple: "Doppio valore"
+bubble.coin: "Moneta"
+bubble.kill: "-1 vita"
+bubble.up: "Vita extra"
+
+# Popups
+popup.levelup: "Livello "
+
+# Infos
+info.state.slowmotion: "Rallentatore"
+info.state.shotspeed: "Velocità proiettile"
+info.state.confusion: "Confusione"
+info.state.timebreak: "Pause bolle"
+info.state.spdboost: "Turbo"
+info.state.protect: "Stato scudo"
+info.state.notouch: "Modalità fantasma"
+info.state.paralyse: "Stiffening"
+info.state.score: "Stato punteg."
+info.diamonds: "Diamanti:"
+info.speed: "Velocità"
+info.coins: "Moneta"
+info.lives: "Vite"
+info.score: "Punto"
+info.level: "Livello"
+info.tps: "Teletrasporti"

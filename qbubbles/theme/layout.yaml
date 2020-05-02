@@ -1,0 +1,57 @@
+TEntry:
+  Entry.highlight:
+    border: 0
+    sticky: nswe
+    children:
+      Entry.border:
+        border: 0
+        sticky: nswe
+        children:
+          Entry.padding:
+            sticky: nswe
+            children:
+              Entry.textarea:
+                sticky: nswe
+                border: 0
+      Entry.bd:
+        sticky: nswe
+        border: 0
+        children:
+          Entry.padding:
+            sticky: nswe
+            children:
+              Entry.textarea:
+                sticky: nswe
+QAccentButton:
+  Button.border:
+    border: "1"
+    children:
+      Button.focus:
+        children:
+          Button.padding:
+            children:
+              Button.label:
+                sticky: nswe
+            sticky: nswe
+        sticky: nswe
+    sticky: nswe
+QScrollableFrame:
+  Frame.border:
+    sticky: nswe
+QCanvasList:
+  Frame.border:
+    sticky: nswe
+QScrollableFrame.Inner:
+  Frame.border:
+    sticky: nswe
+QInnerLabel:
+  Label.border:
+    border: '1'
+    children:
+      Label.padding:
+        border: '1'
+        children:
+          Label.label:
+            sticky: nswe
+        sticky: nswe
+    sticky: nswe

@@ -1,0 +1,8 @@
+TProgressbar:
+  troughrelief: flat
+  borderwidth: 0
+  thickness: 16
+TEntry:
+  relief: flat
+  bd: 0
+  borderwidth: 0

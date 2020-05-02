@@ -1,0 +1,91 @@
+# Store text
+store: "Store"
+store.diamonds: "Diamonds: "
+store.coins: "Coins: "
+
+# Game maps:
+gamemap.classic_map.name: "Classic Map"
+
+# Home Menu
+home.start: "START"
+home.quit: "QUIT"
+home.options: "OPTIONS"
+
+# Pause Menu
+pause.back-to-home: "Save and go back to home"
+
+# Slots Menu
+slots.open: "Open"
+slots.rename: "Rename"
+slots.remove: "Delete"
+slots.add: "New"
+slots.reset: "Reset"
+
+# Options
+options.language: "Language"
+options.name: "English"
+options.save: "Save"
+
+# Items
+item.unlck_lvl: "Unlock level"
+item.teleport: "Teleporter"
+item.protect: "Shield"
+item.diamond: "Diamand"
+item.extra_life: "Extra life"
+item.pop3bubs: "Pop 3 bubblles"
+item.two_extlives: "2 extra lives"
+item.spdboost: "Turbo boost."
+item.ultamode: "Ultra mode"
+item.double_pnt: "Double score"
+item.plus10: "+10 points"
+item.plus100: "+100 points"
+item.plus200: "+200 points"
+item.plus500: "+500 points"
+
+# Bubbles
+bubble.state.shotspdstate: "Fast shooting"
+bubble.state.specialkey: "Special state"
+bubble.state.slowmotion: "Slow Motion"
+bubble.state.confusion: "Confusion"
+bubble.state.timebreak: "Time break"
+bubble.state.hypermode: "Hyper mode"
+bubble.state.ultimate: "Ultimate bubble"
+bubble.state.paralyse: "Paralyse"
+bubble.state.notouch: "Ghost mode"
+bubble.state.protect: "Shield"
+bubble.state.double: "2x state"
+bubble.state.triple: "3x state"
+bubble.stonebubble: "Stone bubble"
+bubble.teleporter: "Teleporter"
+bubble.speeddown: "Slow state"
+bubble.levelkey: "Level key"
+bubble.present: "Gift"
+bubble.diamond: "Diamand"
+bubble.speedup: "Fast state"
+bubble.normal: "Normal bubble"
+bubble.double: "Double bubble"
+bubble.triple: "Triple bubble"
+bubble.coin: "Coin"
+bubble.kill: "Killer"
+bubble.up: "Extra life"
+
+# Popups
+popup.levelup: "Level "
+
+# Infos
+info.state.slowmotion: "Slow motion"
+info.state.shotspeed: "Ammo speed"
+info.state.confusion: "Confusion"
+info.state.timebreak: "Timebreak"
+info.state.spdboost: "Turbo"
+info.state.protect: "Shield stat."
+info.state.notouch: "Ghost mode"
+info.state.paralyse: "Paralyse"
+info.state.score: "Score stat."
+info.diamonds: "Diamands"
+info.speed: "Speed"
+info.coins: "Coins"
+info.lives: "Lives"
+info.score: "Score"
+info.level: "Level"
+info.tps: "Teleports"

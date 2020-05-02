@@ -1,0 +1,11 @@
+{
+  "Rotation": true,
+  "RotationDegrees": 1,
+  "Scale": false,
+  "ScaleMin": null,
+  "ScaleMax": null,
+  "Image": {
+    "Type": "static",
+    "Name": "player"
+  }
+}

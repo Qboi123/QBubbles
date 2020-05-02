@@ -1,0 +1,87 @@
+# Store text
+store.diamonds: "Διαμάντια: "
+store.coins: "Νομίσματα: "
+
+# Home Menu
+home.start: "ΑΡΧΗ"
+home.quit: "ΕΓΚΑΤΑΛΕΙΠΩ"
+home.options: "ΕΠΙΛΟΓΕΣ"
+
+# Pause Menu
+pause.back-to-home: "Αποθηκεύστε και επιστρέψτε στο κύριο μενού"
+
+# Slots Menu
+slots.open: "Ανοιξε"
+slots.rename: "Μετονομάζω"
+slots.remove: "Διαγράφω"
+slots.add: "Νέος"
+slots.reset: "Reset"
+
+# Options
+options.language: "Language"
+options.name: "Greece"
+options.save: "Save"
+
+# Items
+item.unlck_lvl: "Ξεκλειδώστε το επίπεδο"
+item.teleport: "Στημόνι"
+item.protect: "Ασπίδα"
+item.diamond: "Διαμάντι"
+item.extra_life: "Επιπλέον ζωή"
+item.pop3bubs: "Συγκρούσεις 3 φυσαλίδες"
+item.two_extlives: "2 επιπλέον ζωές"
+item.spdboost: "ώθηση τούρμπο"
+item.ultamode: "Υπερβολική λειτουργία"
+item.double_pnt: "Διπλό αποτέλεσμα"
+item.plus10: "+10 μονάδες"
+item.plus100: "+100 μονάδες"
+item.plus200: "+200 μονάδες"
+item.plus500: "+500 μονάδες"
+
+# Bubbles
+bubble.state.shotspdstate: "Γρήγορη λήψη"
+bubble.state.specialkey: "Ειδική κατάσταση"
+bubble.state.slowmotion: "Αργή κίνηση"
+bubble.state.confusion: "Σύγχυση"
+bubble.state.timebreak: "διάλειμμα Ώρα"
+bubble.state.hypermode: "Υψηλή λειτουργία"
+bubble.state.ultimate: "Τελική φούσκα"
+bubble.state.paralyse: "Σκλήρυνση"
+bubble.state.notouch: "Λειτουργία φάντασμα"
+bubble.state.protect: "Ασπίδα"
+bubble.state.double: "2x κατάσταση"
+bubble.state.triple: "3x κατάσταση"
+bubble.stonebubble: "Πέτρινη φούσκα"
+bubble.teleporter: "+1 Στημόνι"
+bubble.speeddown: "Χαμηλώστε ταχύτητα"
+bubble.levelkey: "Πλήκτρο επιπέδου"
+bubble.present: "Δώρο"
+bubble.diamond: "Διαμάντι"
+bubble.speedup: "Επιτάχυνε"
+bubble.normal: "Κανονικός"
+bubble.double: "Διπλό"
+bubble.triple: "Τριπλούς"
+bubble.coin: "Νόμισμα"
+bubble.kill: "Φονιάς"
+bubble.up: "Επιπλέον ζωή"
+
+# Popups
+popup.levelup: "Επίπεδο "
+
+# Infos
+info.state.slowmotion: "Αργή κίνηση"
+info.state.shotspeed: "Ταχύτητα πυρομαχικών"
+info.state.confusion: "Σύγχυση"
+info.state.timebreak: "Ώρα διάλειμμα"
+info.state.spdboost: "ώθηση τούρμπο"
+info.state.protect: "Κατάσταση ασπίδας"
+info.state.notouch: "Λειτουργία φάντασμα"
+info.state.paralyse: "Σκλήρυνση"
+info.state.score: "Κατάσταση βαθμολογίας"
+info.diamonds: "Διαμάντια"
+info.speed: "Ταχύτητα"
+info.coins: "Νομίσματα"
+info.lives: "Ζει"
+info.score: "Σκορ"
+info.level: "Επίπεδο"
+info.tps: "Στημόνι"

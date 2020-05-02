@@ -1,0 +1,87 @@
+# Store text
+store.diamonds: "鑽石： "
+store.coins: "幣： "
+
+# Home Menu
+home.start: "開始"
+home.quit: "返回"
+home.options: "選項"
+
+# Pause Menu
+pause.back-to-home: "保存並返回主菜單"
+
+# Slots Menu
+slots.open: "開放"
+slots.rename: "改名"
+slots.remove: "去掉"
+slots.add: "新"
+slots.reset: "Reset"
+
+# Options
+options.language: "語言"
+options.name: "中國"
+options.save: "Save
+"
+# Items
+item.unlck_lvl: "解鎖水平"
+item.teleport: "傳送師"
+item.protect: "屏蔽"
+item.diamond: "鑽石"
+item.extra_life: "額外的生活"
+item.pop3bubs: "流行3泡泡"
+item.two_extlives: "兩個額外的生命"
+item.spdboost: "渦輪增壓"
+item.ultamode: "超模式"
+item.double_pnt: "雙重分數"
+item.plus10: "加十點"
+item.plus100: "加百點"
+item.plus200: "加二百點"
+item.plus500: "加五百點"
+
+# Bubbles
+bubble.state.shotspdstate: "快速射擊"
+bubble.state.specialkey: "特殊狀態"
+bubble.state.slowmotion: "慢動作"
+bubble.state.confusion: "混亂"
+bubble.state.timebreak: "泡泡時間休息"
+bubble.state.hypermode: "超模式"
+bubble.state.ultimate: "終極泡泡"
+bubble.state.paralyse: "麻木"
+bubble.state.notouch: "鬼模式"
+bubble.state.protect: "屏蔽"
+bubble.state.double: "雙重得分狀態"
+bubble.state.triple: "三重得分狀態"
+bubble.stonebubble: "石泡沫"
+bubble.teleporter: "傳送師"
+bubble.speeddown: "慢一點"
+bubble.levelkey: "等級鍵"
+bubble.present: "禮品"
+bubble.diamond: "鑽石"
+bubble.speedup: "加速"
+bubble.normal: "正常泡泡"
+bubble.double: "雙泡泡"
+bubble.triple: "三重泡泡"
+bubble.coin: "硬幣"
+bubble.kill: "減去一個生命"
+bubble.up: "增添生命"
+
+# Popups
+popup.levelup: "水平 "
+
+# Infos
+info.state.slowmotion: "慢動作狀態"
+info.state.shotspeed: "子彈速度"
+info.state.confusion: "混亂狀態"
+info.state.timebreak: "泡泡時間休息狀態"
+info.state.spdboost: "速度提升"
+info.state.protect: "盾狀態"
+info.state.notouch: "鬼模式"
+info.state.paralyse: "麻木"
+info.state.score: "得分狀態"
+info.diamonds: "鑽石"
+info.speed: "速度"
+info.coins: "幣值"
+info.lives: "生活"
+info.score: "得分了"
+info.level: "水平"
+info.tps: "傳送點"
