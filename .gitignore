@@ -3,3 +3,5 @@
 /.idea/inspectionProfiles/profiles_settings.xml
 /.idea/QBubbles.iml
 /.idea/vcs.xml
+/bin/
+/obj/

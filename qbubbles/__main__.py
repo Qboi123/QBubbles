@@ -145,7 +145,22 @@ class Main(Toplevel):
         """
         Main-class constructor for Q-Bubbles
         """
-        os.chdir(os.path.split(__file__)[0])  # ...\qbubbles
+
+        if "launcherConfig" not in Registry.gameData.keys():
+            game_dir: Optional[str] = None
+            for argv in sys.argv[1:]:
+                if argv.startswith("gameDir="):
+                    game_dir = argv[8:]
+            if game_dir is None:
+                raise RuntimeError("Argument 'gameDir' is not defined, Q-Bubbles cannot continue")
+            if not game_dir.endswith("/"):
+                game_dir += "/"
+            Registry.gameData["launcherConfig"] = {"gameDir": game_dir}
+
+        try:
+            os.chdir(os.path.split(__file__)[0])  # ...\qbubbles
+        except FileNotFoundError:
+            os.chdir(os.path.join(Registry.gameData["launcherConfig"]["gameDir"], "data/1.0-alpha1"))
 
         self.fakeRoot = FakeWindow()
 
@@ -176,17 +191,6 @@ class Main(Toplevel):
         self.deiconify()
         self.overrideredirect(1)
         self.wm_attributes("-alpha", 1)
-
-        if "launcherConfig" not in Registry.gameData.keys():
-            game_dir: Optional[str] = None
-            for argv in sys.argv[1:]:
-                if argv.startswith("gameDir="):
-                    game_dir = argv[8:]
-            if game_dir is None:
-                raise RuntimeError("Argument 'gameDir' is not defined, Q-Bubbles cannot continue")
-            if not game_dir.endswith("/"):
-                game_dir += "/"
-            Registry.gameData["launcherConfig"] = {"gameDir": game_dir}
 
         # os.chdir(game_dir)
 

@@ -61,7 +61,7 @@ class BaseCommand(object):
     def __init__(self):
         self.args = []
 
-    def execute(self, *args, **kwargs) -> Optional[Tuple[str, str, bool]:
+    def execute(self, *args, **kwargs) -> Optional[Tuple[str, str, bool]]:
         pass
 
     def get_description(self) -> str:
@@ -80,4 +80,4 @@ class TeleportCommand(BaseCommand):
         self.args = [int, int, SPRITES]
 
     def execute(self, x, y, sprites):
-
+        pass
