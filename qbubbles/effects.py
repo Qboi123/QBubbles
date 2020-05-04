@@ -3,9 +3,12 @@ import time as _time
 import typing as _t
 
 # import qbubbles.sprites
+# import qbubbles.sprites
 import qbubbles.globals as _g
 import qbubbles.events as _evts
 import qbubbles.exceptions as _exc
+# import qbubbles.sprites
+from qbubbles.gameIO import Logging
 
 
 class BaseEffect(object):
@@ -14,6 +17,7 @@ class BaseEffect(object):
         Base effect class constructor.
         """
 
+        self._uname: _t.Optional[str] = None
         self.callWhen: _t.Callable[[object, float, _t.Union[float, int]], bool] = lambda game, time, strength: True
         self.incompatibles: _t.List[BaseEffect] = []
 
@@ -28,6 +32,9 @@ class BaseEffect(object):
 
         pass
 
+    def on_update(self, effect: 'AppliedEffect', evt: _evts.UpdateEvent):
+        pass
+
     def on_stop(self, effect: 'AppliedEffect', sprite):
         """
         Applied-effect stop event handler.
@@ -39,7 +46,7 @@ class BaseEffect(object):
 
         pass
 
-    def __call__(self, game, time, strength) -> _t.Optional['AppliedEffect']:
+    def __call__(self, game, time, strength, sprite) -> _t.Optional['AppliedEffect']:
         """
         Used for getting the applied effect for the sprite, featuring event handling and remaining time.
 
@@ -51,14 +58,7 @@ class BaseEffect(object):
         if not self.callWhen(game, time, strength):
             return
 
-        active_effects = [applied_effect.baseObject for applied_effect in game.player.appliedEffects]
-        for base_effect in self.incompatibles:
-            if base_effect in active_effects:
-                return
-            if self.__class__ in base_effect.incompatibles:
-                return
-
-        return AppliedEffect(self, game, time, strength)
+        return AppliedEffect(self, game, time, strength, sprite)
 
     def set_uname(self, name):
         """
@@ -69,26 +69,27 @@ class BaseEffect(object):
         """
 
         for symbol in name:
-            if symbol not in _str.ascii_letters+_str.digits+ "_":
+            if symbol not in _str.ascii_letters+_str.digits+ "_:":
                 raise _exc.UnlocalizedNameError(f"Invalid character '{symbol}' for unlocalized name '{name}'")
-        if name[0] not in _str.ascii_letters:
-            raise _exc.UnlocalizedNameError(f"Invalid start character '{name[0]}' for unlocalized name '{name}'")
-        if name[-1] not in _str.ascii_letters+_str.digits:
-            raise _exc.UnlocalizedNameError(f"Invalid start character '{name[-1]}' for unlocalized name '{name}'")
 
-        if self in _g.EFFECT2NAME.keys():
-            raise ValueError(f"Effect '{self.__class__.__module__}.{self.__class__.__name__}' has already an unlocalized name")
-        if self in _g.NAME2EFFECT.values():
-            raise ValueError(f"Effect '{self.__class__.__module__}.{self.__class__.__name__}' has already an unlocalized name")
-        if name in _g.EFFECT2NAME.values():
-            raise ValueError(f"Name '{name}' already defined for effect '{self.__class__.__module__}.{self.__class__.__name__}'")
-        if name in _g.NAME2EFFECT.keys():
-            raise ValueError(f"Name '{name}' already defined for effect '{self.__class__.__module__}.{self.__class__.__name__}'")
+        self._uname = name
+        # if name[0] not in _str.ascii_letters:
+        #     raise _exc.UnlocalizedNameError(f"Invalid start character '{name[0]}' for unlocalized name '{name}'")
+        # if name[-1] not in _str.ascii_letters+_str.digits:
+        #     raise _exc.UnlocalizedNameError(f"Invalid start character '{name[-1]}' for unlocalized name '{name}'")
+        #
+        #     raise ValueError(f"Effect '{self.__class__.__module__}.{self.__class__.__name__}' has already an unlocalized name")
+        # if self in _g.NAME2EFFECT.values():
+        #     raise ValueError(f"Effect '{self.__class__.__module__}.{self.__class__.__name__}' has already an unlocalized name")
+        # if name in _g.EFFECT2NAME.values():
+        #     raise ValueError(f"Name '{name}' already defined for effect '{self.__class__.__module__}.{self.__class__.__name__}'")
+        # if name in _g.NAME2EFFECT.keys():
+        #     raise ValueError(f"Name '{name}' already defined for effect '{self.__class__.__module__}.{self.__class__.__name__}'")
 
         return self.get_uname()
 
     def __repr__(self):
-        return f"Effect(<{self.get_uname()}>)"
+        return f"EffectObject(<{self.get_uname()}>)"
 
     def get_uname(self):
         """
@@ -97,10 +98,10 @@ class BaseEffect(object):
         :returns: The unlocalized name of the base-effect.
         """
 
-        if self not in _g.EFFECT2NAME.keys():
+        if self._uname is None:
             raise ValueError(f"Effect '{self.__class__.__module__}.{self.__class__.__name__}' has no unlocalized name")
 
-        return _g.EFFECT2NAME[self]
+        return self._uname
 
 
 class AppliedEffect(object):
@@ -118,9 +119,18 @@ class AppliedEffect(object):
 
         self.baseObject: BaseEffect = baseclass
         self.baseUname: str = baseclass.get_uname()
+
+        active_effects = [applied_effect.baseObject for applied_effect in game.gameMap.player.appliedEffects]
+        for base_effect in self.baseObject.incompatibles:
+            if base_effect in active_effects:
+                return
+            if self.baseObject.__class__ in base_effect.incompatibles:
+                return
+
         self.strength = strength
         self.extraData = extradata
         self._game = game
+        self.sprite = sprite
 
         self.boundSprite = sprite
 
@@ -128,10 +138,12 @@ class AppliedEffect(object):
         self.dead = False
         self.pause_duration: _t.Optional[float] = None
 
-        if duration < 0:
-            self.dead = True
+        # if duration < 0:
+        #     self.dead = True
 
         self._endTime = _time.time() + duration
+
+        self.on_apply(sprite)
 
     def __repr__(self):
         return f"AppliefEffect(<{self.baseObject.get_uname()}>, {self.get_remaining_time()}, {self.strength})"
@@ -152,24 +164,32 @@ class AppliedEffect(object):
             self.pause_duration = self.get_remaining_time()
 
     def get_data(self):
-        return {"id": self.baseUname, "duration": self.get_remaining_time(), "strength": self.strength}
+        return {"id": self.baseUname, "duration": self.get_remaining_time(), "strength": self.strength, "extradata": list(self.extraData.items())}
 
     def on_stop(self, sprite):
         self.baseObject.on_stop(self, sprite)
+        _evts.PauseEvent.unbind(self.on_pause)
+        _evts.UpdateEvent.unbind(self.on_update)
 
     def on_apply(self, sprite):
         self.baseObject.on_apply(self, sprite)
+        _evts.PauseEvent.bind(self.on_pause)
+        _evts.UpdateEvent.bind(self.on_update)
+        _evts.EffectApplyEvent(self._game, self._game.canvas, self)
 
     def on_update(self, evt: _evts.UpdateEvent):
-        if self.get_remaining_time() < 0:
-            self.dead = True
-            return
-        elif self._pause:
-            self.set_remaining_time(self.pause_duration)
-        else:
-            self.baseObject.on_update(self)
+        # Logging.debug("AppliedEffect", f"UpdateEvent: {self.on_update}")
 
-        self.on_stop()
+        if self._pause:
+            # print(self.pause_duration)
+            self.set_remaining_time(self.pause_duration)
+        elif self.get_remaining_time() < 0:
+            self.dead = True
+            self.on_stop(self.sprite)
+        else:
+            self.baseObject.on_update(self, evt)
+
+        # self.on_stop(self.sprite)
 
     def get_uname(self):
         """
@@ -204,6 +224,8 @@ class SpeedBoostEffect(BaseEffect):
     def __init__(self):
         super(SpeedBoostEffect, self).__init__()
 
+        self.set_uname()
+
     def on_apply(self, effect: 'AppliedEffect', sprite):
         sprite.speed += (effect.strength * sprite.baseSpeed) / 4
 
@@ -216,7 +238,22 @@ class DefenceBoostEffect(BaseEffect):
         super(DefenceBoostEffect, self).__init__()
 
     def on_apply(self, effect: 'AppliedEffect', sprite):
-        sprite.defence += effect.strength * 2
+        sprite.defenceMultiplier += effect.strength * 2
 
     def on_stop(self, effect: 'AppliedEffect', sprite):
-        sprite.defence -= effect.strength * 2
+        sprite.defenceMultiplier -= effect.strength * 2
+
+
+class ScoreMultiplierEffect(BaseEffect):
+    def __init__(self):
+        super(ScoreMultiplierEffect, self).__init__()
+
+        self.set_uname("qbubbles:score_multiplier")
+
+    def on_apply(self, effect: 'AppliedEffect', sprite):
+        if sprite.get_sname() == "qbubbles:player":
+            sprite.scoreMultiplier += effect.strength
+
+    def on_stop(self, effect: 'AppliedEffect', sprite):
+        if sprite.get_sname() == "qbubbles:player":
+            sprite.scoreMultiplier -= effect.strength

@@ -3,11 +3,13 @@ from random import Random
 from tkinter import Canvas
 from typing import Dict, Tuple, Optional, List
 
+from qbubbles.advUtils.time import TimeLength
 from qbubbles.bubbleSystem import BubbleSystem
 from qbubbles.bubbles import Bubble, BubbleObject
 from qbubbles.config import Reader
+from qbubbles.effects import AppliedEffect
 from qbubbles.events import UpdateEvent, CollisionEvent, KeyPressEvent, KeyReleaseEvent, XInputEvent, \
-    MapInitializeEvent, FirstLoadEvent, SaveEvent, LoadCompleteEvent, GameExitEvent, PauseEvent
+    MapInitializeEvent, FirstLoadEvent, SaveEvent, LoadCompleteEvent, GameExitEvent, PauseEvent, EffectApplyEvent
 from qbubbles.gameIO import printerr
 from qbubbles.gui import CPanel, CEffectBarArea
 from qbubbles.nzt import NZTFile
@@ -63,11 +65,13 @@ class GameMap(object):
         self.randoms[id_] = self.format_random(offset)
 
     def init_defaults(self):
-        self.add_random("qbubbles:bubble_system", 4096)
-        self.add_random("qbubbles:bubble_radius", 32)
-        self.add_random("qbubbles:bubble_speed", 64)
-        self.add_random("qbubbles:bubble_x", 128)
-        self.add_random("qbubbles:bubble_y", 256)
+        self.add_random("qbubbles:effect.duration", 24)
+        self.add_random("qbubbles:effect.strength", 16)
+        self.add_random("qbubbles:bubblesystem", 4096)
+        self.add_random("qbubbles:bubble.radius", 32)
+        self.add_random("qbubbles:bubble.speed", 64)
+        self.add_random("qbubbles:bubble.x", 128)
+        self.add_random("qbubbles:bubble.y", 256)
 
     def on_mapinit(self, evt: MapInitializeEvent):
         pass
@@ -109,15 +113,15 @@ class GameMap(object):
         h = Registry.gameData["WindowHeight"]
 
         if x is None:
-            x = self.randoms["qbubbles:bubble_x"][0].randint(0 - radius, w + radius)
+            x = self.randoms["qbubbles:bubble.x"][0].randint(0 - radius, w + radius)
         if y is None:
-            y = self.randoms["qbubbles:bubble_y"][0].randint(0 - radius, h + radius)
+            y = self.randoms["qbubbles:bubble.y"][0].randint(0 - radius, h + radius)
         self.create_bubble(x, y, bubbleObject, radius, speed, bubbleObject.maxHealth)
 
     def get_random_bubble(self) -> Tuple[BubbleObject, float, float]:
-        bubble: Bubble = BubbleSystem.random(self.randoms["qbubbles:bubble_system"][0])
-        radius = self.randoms["qbubbles:bubble_radius"][0].randint(bubble.minRadius, bubble.maxRadius)
-        speed = self.randoms["qbubbles:bubble_speed"][0].randint(bubble.minSpeed, bubble.maxSpeed)
+        bubble: Bubble = BubbleSystem.random(self.randoms["qbubbles:bubblesystem"][0])
+        radius = self.randoms["qbubbles:bubble.radius"][0].randint(bubble.minRadius, bubble.maxRadius)
+        speed = self.randoms["qbubbles:bubble.speed"][0].randint(bubble.minSpeed, bubble.maxSpeed)
 
         max_health = 1
         if hasattr(bubble, "maxHealth"):
@@ -178,15 +182,49 @@ class ClassicMap(GameMap):
         self.panelTop: Optional[CPanel] = None
         self.tSpecialColor = "#ffffff"
         self.tNormalColor = "#3fffff"
+        self.effectImages = {}
+        self.effectX = 100
 
     def init_defaults(self):
-        self.add_random("qbubbles:bubble_system", 4)
-        self.add_random("qbubbles:bubble_system.start_x", 8)
-        self.add_random("qbubbles:bubble_system.start_y", 12)
-        self.add_random("qbubbles:bubble_radius", 32)
-        self.add_random("qbubbles:bubble_speed", 64)
-        self.add_random("qbubbles:bubble_x", 128)
-        self.add_random("qbubbles:bubble_y", 256)
+        self.add_random("qbubbles:effect.duration", 24)
+        self.add_random("qbubbles:effect.strength", 16)
+        self.add_random("qbubbles:bubblesystem", 4096)
+        self.add_random("qbubbles:bubblesystem.start_x", 8)
+        self.add_random("qbubbles:bubblesystem.start_y", 12)
+        self.add_random("qbubbles:bubble.radius", 32)
+        self.add_random("qbubbles:bubble.speed", 64)
+        self.add_random("qbubbles:bubble.x", 128)
+        self.add_random("qbubbles:bubble.y", 256)
+
+    def on_effect_apply(self, evt: EffectApplyEvent):
+        if evt.sprite == self.player:
+            self.effectX += 256
+            lname = Registry.get_lname("effect", evt.appliedEffect.get_uname().replace(":", "."), "name")
+            name = Registry.gameData["language"][lname] if lname in Registry.gameData["language"].keys() else lname
+            self.effectImages[evt.appliedEffect] = {
+                # Textures
+                "effectBar": self.canvas.create_image(
+                    self.effectX, 5,
+                    image=Registry.get_texture(
+                        "gui", "qbubbles:effect_bar", gamemap=self.get_uname()), anchor="nw"
+                ),
+                "icon": self.canvas.create_image(
+                    self.effectX+1, 6,
+                    image=Registry.get_texture(
+                        "effect", evt.appliedEffect.get_uname(), gamemap=self.get_uname()), anchor="nw"
+                ),
+
+                # Texts
+                "text": self.canvas.create_text(
+                    self.effectX + 36, 18,
+                    text=name % {
+                        "strength": int(evt.appliedEffect.strength)
+                    }, anchor="w"
+                ),
+                "time": self.canvas.create_text(
+                    self.effectX + 200, 18, text=str(TimeLength(evt.appliedEffect.get_remaining_time())), anchor="w"
+                )
+            }
         
     def on_firstload(self, evt: FirstLoadEvent):
         _gameIO.Logging.info("Gamemap", "Create bubbles because the save is loaded for first time")
@@ -279,7 +317,10 @@ class ClassicMap(GameMap):
 
         self.background = CPanel(canvas, 0, 71, "extend", "expand", fill="#00a7a7", outline="#00a7a7")
 
+        self.canvas = canvas
+
         LoadCompleteEvent.bind(self.on_loadcomplete)
+        EffectApplyEvent.bind(self.on_effect_apply)
 
         bubbles = Registry.saveData["Sprites"]["qbubbles:bubble"]["objects"].copy()
         Registry.saveData["Sprites"]["qbubbles:bubble"]["objects"] = []
@@ -301,7 +342,6 @@ class ClassicMap(GameMap):
         else:
             self.player.create(Registry.gameData["MiddleX"], Registry.gameData["MiddleY"])
         self._gameobjects.append(self.player)
-        self.canvas = canvas
 
     def on_pause(self, evt: PauseEvent):
         self._pause = evt.pause
@@ -316,12 +356,37 @@ class ClassicMap(GameMap):
             h = Registry.gameData["WindowHeight"]
 
             x = w + radius
-            y = self.randoms["qbubbles:bubble_y"][0].randint(71 + radius, h - radius)
+            y = self.randoms["qbubbles:bubble.y"][0].randint(71 + radius, h - radius)
             self.create_bubble(x, y, bubbleObject, radius, speed, bubbleObject.maxHealth)
         self.canvas.itemconfig(self.texts["score"], text=f"{self.player.score}")
         self.canvas.itemconfig(self.texts["level"], text=f"{self.player.get_objectdata()['level']}")
         self.canvas.itemconfig(self.texts["lives"], text=f"{round(self.player.health, 1)}")
         self.canvas.itemconfig(self.texts["score"], text=f"{self.player.score}")
+
+        move_left = 0
+        for appliedeffect, dict_ in self.effectImages.copy().items():
+
+            self.canvas.itemconfig(dict_["time"],
+                                   text=str(TimeLength(appliedeffect.get_remaining_time())))
+
+            self.canvas.move(dict_["icon"], -move_left, 0)
+            self.canvas.move(dict_["time"], -move_left, 0)
+            self.canvas.move(dict_["text"], -move_left, 0)
+            self.canvas.move(dict_["effectBar"], -move_left, 0)
+
+            if appliedeffect.get_remaining_time() < 0:
+                appliedeffect.dead = True
+
+            if appliedeffect.dead:
+                self.canvas.delete(dict_["icon"])
+                self.canvas.delete(dict_["time"])
+                self.canvas.delete(dict_["text"])
+                self.canvas.delete(dict_["effectBar"])
+
+                del self.effectImages[appliedeffect]
+                move_left += 256
+                self.effectX -= 256
+
         # self.texts["score"] = self.player.score
         for bubble in self._bubbles.copy():
             bubble: BubbleObject
@@ -339,9 +404,9 @@ class ClassicMap(GameMap):
         h = Registry.gameData["WindowHeight"]
 
         if x is None:
-            x = self.randoms["qbubbles:bubble_x"][0].randint(0 - radius, w + radius)
+            x = self.randoms["qbubbles:bubble.x"][0].randint(0 - radius, w + radius)
         if y is None:
-            y = self.randoms["qbubbles:bubble_y"][0].randint(71 + radius, h - radius)
+            y = self.randoms["qbubbles:bubble.y"][0].randint(71 + radius, h - radius)
         self.create_bubble(x, y, bubbleObject, radius, speed, bubbleObject.maxHealth)
 
     def on_loadcomplete(self, evt: LoadCompleteEvent):
@@ -531,13 +596,13 @@ class DimensionalMap(GameMap):
         self.tNormalColor = "#3fffff"
 
     def init_defaults(self):
-        self.add_random("qbubbles:bubble_system", 4)
-        self.add_random("qbubbles:bubble_system.start_x", 8)
-        self.add_random("qbubbles:bubble_system.start_y", 12)
-        self.add_random("qbubbles:bubble_radius", 32)
-        self.add_random("qbubbles:bubble_speed", 64)
-        self.add_random("qbubbles:bubble_x", 128)
-        self.add_random("qbubbles:bubble_y", 256)
+        self.add_random("qbubbles:bubblesystem", 4)
+        self.add_random("qbubbles:bubblesystem.start_x", 8)
+        self.add_random("qbubbles:bubblesystem.start_y", 12)
+        self.add_random("qbubbles:bubble.radius", 32)
+        self.add_random("qbubbles:bubble.speed", 64)
+        self.add_random("qbubbles:bubble.x", 128)
+        self.add_random("qbubbles:bubble.y", 256)
 
     def on_firstload(self, evt: FirstLoadEvent):
         print("Create bubbles because the save is loaded for first time")
@@ -662,7 +727,7 @@ class DimensionalMap(GameMap):
             h = Registry.gameData["WindowHeight"]
 
             x = w + radius
-            y = self.randoms["qbubbles:bubble_y"][0].randint(71 + radius, h - radius)
+            y = self.randoms["qbubbles:bubble.y"][0].randint(71 + radius, h - radius)
             self.create_bubble(x, y, bubbleObject, radius, speed, bubbleObject.maxHealth)
         self.canvas.itemconfig(self.texts["score"], text=f"{self.player.score}")
         self.canvas.itemconfig(self.texts["level"], text=f"{self.player.get_objectdata()['level']}")
@@ -685,9 +750,9 @@ class DimensionalMap(GameMap):
         h = Registry.gameData["WindowHeight"]
 
         if x is None:
-            x = self.randoms["qbubbles:bubble_x"][0].randint(0 - radius, w + radius)
+            x = self.randoms["qbubbles:bubble.x"][0].randint(0 - radius, w + radius)
         if y is None:
-            y = self.randoms["qbubbles:bubble_y"][0].randint(71 + radius, h - radius)
+            y = self.randoms["qbubbles:bubble.y"][0].randint(71 + radius, h - radius)
         self.create_bubble(x, y, bubbleObject, radius, speed, bubbleObject.maxHealth)
 
     def on_loadcomplete(self, evt: LoadCompleteEvent):

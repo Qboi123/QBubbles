@@ -398,10 +398,10 @@ class Player(Sprite):
 
         # Multiplier attributes
         self.regenValue = 1
-        self.attackValue = 0
+        self.attackValue = 1
         self.defenceValue = 1
         self.scoreMultiplier = 1
-        self.regenMultiplier = 0
+        self.regenMultiplier = 1
         self.attackMultiplier = 1
         self.defenceMultiplier = 1
 
@@ -458,6 +458,7 @@ class Player(Sprite):
         self.down = False
         self.right = False
         self.left = False
+        self._pause = False
 
     def reload(self, odata: _t.Union[_t.Dict, SpriteData]):
         """
@@ -475,10 +476,11 @@ class Player(Sprite):
             effect: _effects.BaseEffect = _reg.Registry.get_effect(effectdata["id"])
             
             # Start the effect using saved effect data. Using the object-data (odata) given from the arguments.
-            self.start_effect(
-                effect, _reg.Registry.get_scene("Game"), effectdata["duration"], effectdata["strength"], 
-                **effectdata["extradata"])
-            # effectdata[]
+            if effectdata["duration"] > 0.0:
+                self.start_effect(
+                    effect, _reg.Registry.get_scene("Game"), effectdata["duration"], effectdata["strength"],
+                    **dict(effectdata["extradata"]))
+                # effectdata[]
         # self.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation
 
     def add_score(self, value):
@@ -508,7 +510,9 @@ class Player(Sprite):
             self.dead = True
 
     @overload.overload
-    def regen(self, value):
+    def regen(self, value=None):
+        if value is None:
+            return self.regen()
         self.health += value * self.regenMultiplier
 
     @regen.add
@@ -540,6 +544,7 @@ class Player(Sprite):
             return
         _gameIO.Logging.info("Player", "Activating events...")
         self.events_activated = True
+        _evts.PauseEvent.bind(self.on_pause)
         _evts.KeyPressEvent.bind(self.on_key_press)
         _evts.KeyReleaseEvent.bind(self.on_key_release)
         _evts.UpdateEvent.bind(self.on_update)
@@ -558,11 +563,15 @@ class Player(Sprite):
             return
         _gameIO.Logging.info("Player", "Deactivating events...")
         self.events_activated = False
+        _evts.PauseEvent.unbind(self.on_pause)
         _evts.KeyPressEvent.unbind(self.on_key_press)
         _evts.KeyReleaseEvent.unbind(self.on_key_release)
         _evts.UpdateEvent.unbind(self.on_update)
         _evts.CollisionEvent.unbind(self.on_collision)
         _evts.SavedataReadedEvent.unbind(self.on_savedata_readed)
+
+    def on_pause(self, evt: _evts.PauseEvent):
+        self._pause = evt.pause
 
     def on_collision(self, evt: _evts.CollisionEvent):
         """
@@ -609,28 +618,48 @@ class Player(Sprite):
         for effect in data["Player"]["Effects"]:
             effect_class: _effects.BaseEffect = _reg.Registry.get_effect(effect["id"])
             time_length: float = effect["timeRemaining"]
-            strength: float = effect["strength"]
-            self.start_effect(effect_class, _reg.Registry.get_scene("Game"), time_length, strength)
+            if time_length > 0.0:
+                strength: float = effect["strength"]
+                self.start_effect(effect_class, _reg.Registry.get_scene("Game"), time_length, strength)
 
-    def start_effect(self, effect_class, scene, time_length, strength, **extradata) -> typing.NoReturn:
+    def remove_effect(self, appliedeffect: _effects.AppliedEffect):
+        """
+        Removes an applied-effect from the player's effect list.
+
+        :param appliedeffect: The applied-effect to remove.
+        :returns: The index where the applied-effect was removed.
+        """
+
+        index = self.appliedEffects.index(appliedeffect)
+        del self.appliedEffectTypes[index]
+        del self.appliedEffects[index]
+        return index
+
+    def start_effect(self, effect_class: _effects.BaseEffect, scene, duration: float, strength: _t.Union[float, int], **extradata) -> _effects.AppliedEffect:
         """
         Starts an effect, it converts the BaseEffect() subclass into an AppliedEffect() instance. And starts the effect.
 
-        :param effect_class:
-        :param scene:
-        :param time_length:
-        :param strength:
-        :param extradata:
-        :return:
+        :param effect_class: The base-class of the effect.
+        :param scene: The game-scene.
+        :param duration: The duration of the effect.
+        :param strength: The strength of the effect
+        :param extradata: The extra data to add to the effect.
+        :raises AssertionError: If the effect-class is a type.
+        :returns: The applied-effect
         """
 
-        self.appliedEffects.append(_effects.AppliedEffect(effect_class, scene, time_length, strength, **extradata))
+        assert not isinstance(effect_class, type)
+
+        appliedeffect = _effects.AppliedEffect(effect_class, scene, duration, strength, self, **extradata)
+        self.appliedEffects.append(appliedeffect)
+
+        return appliedeffect
 
     def get_objectdata(self):
         """
         Method to get the object data of the player, in a dict() format.
 
-        :return:
+        :returns: A dict containing the object data.
         """
 
         odata = dict(self._objectData.copy())
@@ -668,6 +697,9 @@ class Player(Sprite):
 
         _reg.Registry.get_scene("Game").canvas.move(self.id, x, y)
 
+    def on_effect_stop(self, appliedeffect: _effects.AppliedEffect):
+        self.remove_effect(appliedeffect)
+
     def on_update(self, evt: _evts.UpdateEvent):
         # if self.up:
         #     y -= self.baseSpeed * evt.dt
@@ -678,31 +710,32 @@ class Player(Sprite):
         # if self.right:
         #     x += self.baseSpeed * evt.dt
 
-        pixels = 0
+        if not self._pause:
+            pixels = 0
 
-        if self.up:
-            pixels = self.baseSpeed
-        if self.down:
-            pixels = -self.baseSpeed
-        if self.left:
-            self.rotate(+(evt.dt * 160))
-        if self.right:
-            self.rotate(-(evt.dt * 160))
+            if self.up:
+                pixels = self.baseSpeed
+            if self.down:
+                pixels = -self.baseSpeed
+            if self.left:
+                self.rotate(+(evt.dt * 160))
+            if self.right:
+                self.rotate(-(evt.dt * 160))
 
-        import math
+            import math
 
-        d = -(evt.dt * pixels)  # distance covered this tick.
-        angle_radians = math.radians(self.rotation)
-        dx = -math.cos(angle_radians)
-        dy = math.sin(angle_radians)
+            d = -(evt.dt * pixels)  # distance covered this tick.
+            angle_radians = math.radians(self.rotation)
+            dx = -math.cos(angle_radians)
+            dy = math.sin(angle_radians)
 
-        dx, dy = dx * d, dy * d
+            dx, dy = dx * d, dy * d
 
-        x, y = dx, dy
+            x, y = dx, dy
 
-        # print(self.up, self.left, self.down, self.right)
-        # print(x, y)
-        self.move(x, y)
+            # print(self.up, self.left, self.down, self.right)
+            # print(x, y)
+            self.move(x, y)
 
     def create(self, x, y):
         image = _reg.Registry.get_texture("sprite", "player", rotation=0)

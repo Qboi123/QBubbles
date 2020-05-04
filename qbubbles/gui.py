@@ -1,3 +1,4 @@
+import time
 from tkinter import Canvas, PhotoImage
 from typing import Optional, Tuple, Union, Callable, Any
 from zipimport import zipimporter
@@ -20,6 +21,9 @@ class CRectangle(object):
         self._id = canvas.create_rectangle(x1, y1, x2, y2, fill=fill, outline=outline)  # , anchor=anchor)
         self._canvas = canvas
         # print("CRectangle created")
+
+    def delete(self):
+        self._canvas.delete(self._id)
 
     def get_id(self):
         return self._id
@@ -53,6 +57,7 @@ class CRectangle(object):
 
 class CImage(object):
     def __init__(self, canvas: Canvas, x, y, *, image, anchor="center", tags=tuple()):
+        self.root = canvas._root()
         self._id = canvas.create_image(x, y, image=image, anchor=anchor, tags=tags)  # , anchor=anchor)
         self._canvas: Canvas = canvas
         self._image: Union[ImageTk.PhotoImage, PhotoImage] = image
@@ -61,6 +66,9 @@ class CImage(object):
 
     def get_id(self):
         return self._id
+
+    def delete(self):
+        self._canvas.delete(self._id)
 
     def move(self, x=None, y=None):
         return self._canvas.move(self._id, x, y)
@@ -102,6 +110,7 @@ class CImage(object):
 
 class CText(object):
     def __init__(self, canvas: Canvas, x, y, *, text, anchor="center", fill="", tags=tuple(), font=("Helvetica", 10)):
+        self.root = canvas._root()
         self._id = canvas.create_text(x, y, text=text, anchor=anchor, tags=tags, fill=fill, font=font)
         self._canvas: Canvas = canvas
         self._text: str = text
@@ -109,6 +118,9 @@ class CText(object):
         self._tags = tags
         self._fill = fill
         self._font = font
+
+    def delete(self):
+        self._canvas.delete(self._id)
 
     def get_id(self):
         return self._id
@@ -157,6 +169,7 @@ class CText(object):
 
 class CPanel(CRectangle):
     def __init__(self, canvas: Canvas, x, y, width, height, fill="", outline=""):
+        self.root = canvas._root()
         self._width = width
         self._height = height
         if width == "extend":
@@ -166,6 +179,9 @@ class CPanel(CRectangle):
         self.x = x
         self.y = y
         super(CPanel, self).__init__(canvas, x, y, width, height, fill=fill, outline=outline, anchor="nw")
+
+    def delete(self):
+        self._canvas.delete(self._id)
 
     def on_resize(self, event: ResizeEvent):
         # noinspection PyDeepBugsBinOperand
@@ -837,3 +853,87 @@ class QCanvasList(_ttk.Widget):
         if c.winfo_rootx() < evt.x_root < (c.winfo_rootx() + c.winfo_width()):
             if c.winfo_rooty() < evt.y_root < (c.winfo_rooty() + c.winfo_height()):
                 self._command(c, i)
+
+
+class CTransparentButton(CImage):
+    buttonimageNormalPil = Image.new("RGBA", (1, 1), "#ffffff7f")
+    buttonimageHoverPil = Image.new("RGBA", (1, 1), "#ffffffaf")
+    buttonimagePressedPil = Image.new("RGBA", (1, 1), "#0000007f")
+
+    def __init__(self, canvas, x, y, height, width, text="", command=lambda: None, bg=None, fg=None, font=None, relief=None):
+        root = self.root = canvas._root()
+
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.x1, self.y1 = x-width/2, y-height/2
+        self.x2, self.y2 = x+width/2, y+height/2
+
+        if not hasattr(self, "buttonimageNormal"):
+            a = CTransparentButton.buttonimageNormalPil.copy().resize((width, height))
+            self.buttonimageNormal = ImageTk.PhotoImage(a)
+        if not hasattr(self, "buttonimageHover"):
+            b = CTransparentButton.buttonimageHoverPil.copy().resize((width, height))
+            self.buttonimageHover = ImageTk.PhotoImage(b)
+        if not hasattr(self, "buttonimagePressed"):
+            c = CTransparentButton.buttonimagePressedPil.copy().resize((width, height))
+            self.buttonimagePressed = ImageTk.PhotoImage(c)
+
+        canvas.update()
+        self.root.update()
+
+        super(CTransparentButton, self).__init__(canvas, x, y, image=self.buttonimageNormal)
+
+        self._textid = CText(canvas, x, y, text=text, font=font, fill="#000000")
+        self._command = command
+
+        self._hovered = False
+        self._pressed = False
+
+        self._canvas.tag_bind(self._id, "<Enter>", self.on_enter)
+        self._canvas.tag_bind(self._id, "<Leave>", self.on_leave)
+        self._canvas.tag_bind(self._id, "<ButtonPress-1>", self.on_press)
+        self._canvas.tag_bind(self._id, "<ButtonRelease-1>", self.on_release)
+        self._canvas.tag_bind(self._textid._id, "<Enter>", self.on_enter)
+        self._canvas.tag_bind(self._textid._id, "<Leave>", self.on_leave)
+        self._canvas.tag_bind(self._textid._id, "<ButtonPress-1>", self.on_press)
+        self._canvas.tag_bind(self._textid._id, "<ButtonRelease-1>", self.on_release)
+        self._canvas.bind("<Leave>", self.on_leave)
+
+    def delete(self):
+        self._canvas.delete(self._id)
+        self._textid.delete()
+
+    def on_enter(self, event):
+        self._canvas.itemconfig(self._id, image=self.buttonimageHover)
+        self._textid.configure(fill="#000000")
+        self._hovered = True
+
+    def on_leave(self, event):
+        # if self._pressed:
+        #     self._canvas.itemconfig(self._id, image=self.buttonimagePressed)
+        # else:
+        self._canvas.itemconfig(self._id, image=self.buttonimageNormal)
+        self._textid.configure(fill="#000000")
+        self._hovered = False
+
+    def on_press(self, event):
+        self._canvas.itemconfig(self._id, image=self.buttonimagePressed)
+        self._textid.configure(fill="#ffffff")
+        self._pressed = True
+
+    def on_release(self, event):
+        if self._hovered:
+            self._canvas.itemconfig(self._id, image=self.buttonimageHover)
+            self._textid.configure(fill="#000000")
+        else:
+            self._canvas.itemconfig(self._id, image=self.buttonimageNormal)
+            self._textid.configure(fill="#000000")
+        self._pressed = False
+
+        print(event.x, event.y)
+        print(self.x1, self.y1, self.x2, self.y2)
+
+        if (event.x > self.x1 and event.y > self.y1) and (event.x < self.x2 and event.y < self.y2):
+            self._command()

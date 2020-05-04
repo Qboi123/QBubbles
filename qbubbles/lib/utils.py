@@ -193,16 +193,18 @@ def createbubble_image(size, inner_image: Image.Image = None, *colors):
     i = 2
 
     # Drawing ellipses for Bubble.
-    width = 1
+    width = 1.5
     w = width
+    j = 0
     for circ_color in colors:
-        if circ_color != colors[0]:
+        if j != 0:
             draw_ellipse(im, (0 + i, 0 + i, size[0] - i, size[0] - i), outline=circ_color, width=w, antialias=8)
-        elif circ_color != colors[-1]:
+        elif j != len(colors):
             draw_ellipse(im, (0 + i, 0 + i, size[0] - i, size[0] - i), outline=circ_color, width=w, antialias=8)
         else:
             draw_ellipse(im, (0 + i, 0 + i, size[0] - i, size[0] - i), outline=circ_color, width=w, antialias=8)
         i += 1.5
+        j += 1
 
     i += 10
 

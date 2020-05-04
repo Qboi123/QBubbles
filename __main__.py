@@ -1,5 +1,5 @@
-from qbubbles.__main__ import Main
+import qbubbles.__main__
 
 
 if __name__ == '__main__':
-    Main().mainloop()
+    qbubbles.__main__.Main().mainloop()

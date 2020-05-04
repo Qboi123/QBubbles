@@ -5,6 +5,7 @@ import sys
 import zipimport
 from tkinter import PhotoImage
 from typing import Type
+import typing as _t
 
 import PIL as _PIL
 import yaml
@@ -17,6 +18,7 @@ import qbubbles.game as _game
 import qbubbles.gameIO as _gameIO
 import qbubbles.globals as _g
 import qbubbles.init.bubblesInit as _bubblesInit
+import qbubbles.init.effectsInit as _effectsInit
 import qbubbles.init.mapsInit as _mapsInit
 import qbubbles.init.spritesInit as _spritesInit
 import qbubbles.menus.titleMenu as _titleMenu
@@ -26,6 +28,7 @@ import qbubbles.resources as _res
 import qbubbles.scenemanager as _scenemngr
 import qbubbles.scenes as _scenes
 import qbubbles.utils as _utils
+from qbubbles.effects import BaseEffect
 
 
 class Load(_scenemngr.CanvasScene):
@@ -42,6 +45,7 @@ class Load(_scenemngr.CanvasScene):
         super(Load, self).show_scene(*args, **kwargs)
         self.initialize()
 
+    # noinspection PyPep8Naming
     def initialize(self):
         config_ = _config.Reader(
             "config/startup.nzt").get_decoded()
@@ -292,7 +296,6 @@ class Load(_scenemngr.CanvasScene):
                 "".join(list(traceback.format_exception_only(e.__class__, e)))
             )
 
-
         self.canvas.itemconfig(t2, text="Loading bubble models")
         self.canvas.update()
 
@@ -443,7 +446,43 @@ class Load(_scenemngr.CanvasScene):
         # for i in Registry.gameData["BubbleImage"].keys():
         #     print("%s: %s" % (i, repr(Registry.gameData["BubbleImage"][i])))
 
-        # Adding ship image.
+        # -=================== INTITIALIZE EFFECTS ===================- #
+        self.canvas.itemconfig(t1, text="Loading Effects")
+        self.canvas.itemconfig(t2, text="Initialize effects")
+        self.canvas.update()
+
+        _gameIO.Logging.info("GameLoader", f"Loading Effects...")
+
+        baseEffects: _t.List[BaseEffect] = _effectsInit.init_effects()
+        for baseEffect in baseEffects:
+            self.canvas.itemconfig(t2, text=f"Register effect {baseEffect.get_uname()}")
+            _reg.Registry.register_effect(baseEffect.get_uname(), baseEffect)
+
+        # -================== INITIALIZE GUI IMAGES ==================- #
+        self.canvas.itemconfig(t1, text="Loading Other Images")
+        self.canvas.itemconfig(t2, text="Loading GUI Images")
+        self.canvas.update()
+
+        _gameIO.Logging.info("GameLoader", f"Loading GUI Images...")
+
+        _reg.Registry.register_texture(
+            "gui", "qbubbles:effect_bar", PhotoImage(file="assets/textures/gui/classic_map/effect_bar.png"),
+            gamemap="qbubbles:classic_map")
+
+        self.canvas.itemconfig(t1, text="Loading Other Images")
+        self.canvas.itemconfig(t2, text="Loading Effect Images")
+        self.canvas.update()
+
+        _gameIO.Logging.info("GameLoader", f"Loading Effect Images...")
+
+        _reg.Registry.register_default_texture("effect", texture=PhotoImage(file="assets/textures/icons/effect/default.png"))
+
+        for item in _os.listdir("assets/textures/icons/effect/"):
+            image = PhotoImage(file=f"assets/textures/icons/effect/{item}")
+            _reg.Registry.register_texture("effect", f"qbubbles:{_os.path.splitext(item)[0]}", image, gamemap="qbubbles:classic_map")
+
+        # -===================== INITIALIZE ICONS ====================- #
+        # Adding ship image...                                          #
         _reg.Registry.register_image("ShipImage", PhotoImage(file="assets/Ship.png"))
 
         self.canvas.itemconfig(t1, text="Loading Other Images")
@@ -453,7 +492,7 @@ class Load(_scenemngr.CanvasScene):
         _gameIO.Logging.info("GameLoader", f"Loading Icons...")
 
         try:
-            # Getting the store-icons.
+            # Adding Store Item Icons. (SII)
             _reg.Registry.register_storeitem("Key", PhotoImage(file="assets/Images/StoreItems/Key.png"))
             self.canvas.itemconfig(t2, text="Loading Icons - Store Item: Key")
             self.canvas.update()

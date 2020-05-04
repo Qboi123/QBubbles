@@ -3,16 +3,17 @@ import os
 import shutil
 from time import sleep
 
-from PIL import ImageGrab, ImageTk, ImageFilter
+from PIL import ImageGrab, ImageTk, ImageFilter, Image
 
 from qbubbles.ammo import *
 from qbubbles.bubble import place_bubble
-from qbubbles.bubbles import Bubble
+import qbubbles.bubbles
 from qbubbles.components import *
 from qbubbles.effects import BaseEffect, AppliedEffect
 from qbubbles.events import KeyReleaseEvent, UpdateEvent, KeyPressEvent, XInputEvent, CollisionEvent, \
     MapInitializeEvent, FirstLoadEvent, CleanUpEvent, LoadCompleteEvent, GameExitEvent, PauseEvent, SaveEvent
 from qbubbles.gameIO import Logging
+from qbubbles.gui import CTransparentButton
 from qbubbles.maps import GameMap
 from qbubbles.modemanager import ModeManager
 from qbubbles.scenemanager import CanvasScene
@@ -30,7 +31,7 @@ FatalError = Exception
 ModRequirementInvalid = FatalError
 ClassRequirementInvalid = ModRequirementInvalid
 
-# log = Logging("logs", True, True)
+log = Logging
 
 # log.info("<Root>", "Imports loading success")
 # log.info("<Root>", "Starting Game")
@@ -503,9 +504,11 @@ class Game(CanvasScene):
                 self.unpause()  # FIXME: Destroy pause-menu
             else:
                 raise ValueError("Pause mode must be True or False")
-        Logging.debug("KeyReleaseEvent", f"Key Released: {evt.keySym}")
+        # Logging.debug("KeyReleaseEvent", f"Key Released: {evt.keySym}")
 
     def pause(self):
+        from PIL import ImageGrab, ImageTk, ImageFilter, Image
+
         # TODO: Create pause menu here, set game to pause and call PauseEvent(...)
         self._pauseMode = True
 
@@ -513,108 +516,149 @@ class Game(CanvasScene):
 
         font = Font("Helvetica", 10)
 
+        blurim = ImageGrab.grab((0, 70, Registry.gameData["WindowWidth"], Registry.gameData["WindowHeight"]), True)
+        blurim2 = blurim.filter(ImageFilter.GaussianBlur(20))
+        blurimtk = ImageTk.PhotoImage(blurim2)
+        bubviewback = Image.new("RGBA", (Registry.gameData["WindowWidth"], 650), "#0000003f")
+        bubviewbacktk = ImageTk.PhotoImage(bubviewback)
+
+        self.root.update()
+        # im.show()
+        # im = im.crop((0, 70, Registry.gameData["WindowWidth"], Registry.gameData["WindowHeight"]))
+
         if self.pauseIcon is not None:
             self.canvas.delete(self.pauseIcon)  # Registry.get_icon("pause"))
         if self.modeManager.currentModeName == "specialLevel":
-            self.temp["qbubbles:pause.bg"] = self.canvas.create_rectangle(
-                0, 69, Registry.gameData["WindowWidth"], Registry.gameData["WindowHeight"],
-                fill="#3f3f3f", outline="#3f3f3f")
+            # self.temp["qbubbles:pause.bg"] = self.canvas.create_rectangle(
+            #     0, 69, Registry.gameData["WindowWidth"], Registry.gameData["WindowHeight"],
+            #     fill="#3f3f3f", outline="#3f3f3f")
+            self.temp["qbubbles:pause.bg"] = self.canvas.create_image(0, 70, image=blurimtk, anchor="nw")
             self.temp["qbubbles:pause.to_line"] = self.canvas.create_line(
                 0, 69, Registry.gameData["WindowWidth"], 69, fill="#afafaf")
-            self.temp["qbubbles:pause.menu_frame"] = Frame(
-                root, bg="#3f3f3f")
-            self.temp['qbubbles:pause.menu'] = self.canvas.create_window(
-                Registry.gameData["MiddleX"], Registry.gameData["MiddleY"] / 2 + 130,
-                window=self.temp['qbubbles:pause.menu_frame'], anchor='n', height=20, width=300)
-            self.temp["qbubbles:pause.back_to_menu"] = Button(
-                self.temp["qbubbles:pause.menu_frame"], text=Registry.gameData["language"]["pause.back-to-home"],
-                command=lambda: self.return_main(), relief="flat", bg="#1f1f1f", fg="#afafaf", font=font)
-            back = "#1f1f1f"
+            # self.temp["qbubbles:pause.menu_frame"] = Frame(
+            #     root, bg="#000001")
+            # self.temp["qbubbles:pause.menu_canvas"] = Canvas(
+            #     root, bg="#000001")
+            # self.temp['qbubbles:pause.menu'] = self.canvas.create_window(
+            #     Registry.gameData["MiddleX"], Registry.gameData["MiddleY"] / 2 + 130,
+            #     window=self.temp['qbubbles:pause.menu_frame'], anchor='n', height=20, width=300)
+            self.temp["qbubbles:pause.back_to_menu"] = CTransparentButton(
+                self.canvas, Registry.gameData["MiddleX"], Registry.gameData["MiddleY"] / 2 + 150, 32, 300,
+                text=Registry.gameData["language"]["pause.back-to-home"],
+                command=lambda: self.return_main(), font=font.get_tuple())
+            back = "tran"
             fore = "yellow"
         else:
-            self.temp["qbubbles:pause.bg"] = self.canvas.create_rectangle(
-                0, 69, Registry.gameData["WindowWidth"], Registry.gameData["WindowHeight"],
-                fill="darkcyan", outline="darkcyan")
+            # self.temp["qbubbles:pause.bg"] = self.canvas.create_rectangle(
+            #     0, 69, Registry.gameData["WindowWidth"], Registry.gameData["WindowHeight"],
+            #     fill="#000001", outline="#000001")
+            self.temp["qbubbles:pause.bg"] = self.canvas.create_image(0, 70, image=blurimtk, anchor="nw")
             self.temp["qbubbles:pause.to_line"] = self.canvas.create_line(
                 0, 69, Registry.gameData["WindowWidth"], 69, fill="#7fffff")
             # self.temp['pause/bottom.line'] = self.canvas.create_line(0, config["height"] - 102, config["width"],
             #                                                config["height"] - 102,
             #                                                fill="#7fffff")
 
-            self.temp["qbubbles:pause.menu_frame"] = Frame(root, bg="darkcyan")
-            self.temp["qbubbles:pause.menu"] = self.canvas.create_window(
-                Registry.gameData["MiddleX"], Registry.gameData["MiddleY"] / 2 + 130,
-                window=self.temp['qbubbles:pause.menu_frame'], anchor='n', height=500, width=300)
+            # self.temp["qbubbles:pause.menu_frame"] = Frame(root, bg="#000001")
+            # self.temp["qbubbles:pause.menu"] = self.canvas.create_window(
+            #     Registry.gameData["MiddleX"], Registry.gameData["MiddleY"] / 2 + 130,
+            #     window=self.temp['qbubbles:pause.menu_frame'], anchor='n', height=500, width=300)
 
-            self.temp["qbubbles:pause.back_to_menu"] = Button(
-                self.temp["qbubbles:pause.menu_frame"], text=Registry.gameData["language"]["pause.back-to-home"],
-                command=lambda: self.return_main(), relief="flat", bg="#005f5f", fg="#7fffff", font=[font])
+            self.temp["qbubbles:pause.back_to_menu"] = CTransparentButton(
+                self.canvas, Registry.gameData["MiddleX"], Registry.gameData["MiddleY"] / 2 + 150, 32, 300,
+                text=Registry.gameData["language"]["pause.back-to-home"],
+                command=lambda: self.return_main(), relief="flat", bg="#005f5f", fg="#7fffff", font=font.get_tuple())
 
-            back = "#005f5f"
+            back = "#00a7a7"
             fore = "#7fffff"
 
-        self.temp["qbubbles:pause.s_frame"] = Frame(root, bg=back)
-        self.temp["qbubbles:pause.s_frame"].place(
-            x=Registry.gameData["MiddleX"], y=Registry.gameData["MiddleY"] / 2 + 250, anchor='n', width=1000)
-        self.temp["qbubbles:pause.sw"] = ScrolledWindow(
-            self.temp["qbubbles:pause.s_frame"], 1020, 321, height=321, width=1000)
+        s_frame = self.temp["qbubbles:pause.s_frame"] = Frame(root, bg=back)
 
-        self.temp["qbubbles:pause.canv"] = self.temp["qbubbles:pause.sw"].canv
-        self.temp["qbubbles:pause.canv"].config(bg=back)
-        self.temp["qbubbles:pause.sw"].scrollwindow.config(bg=back)
-
-        self.temp["qbubbles:pause.frame"] = self.temp["qbubbles:pause.sw"].scrollwindow
-
-        a = ("Normal", "Double", "Kill", "Triple", "SpeedUp", "SpeedDown", "Up", "Ultimate", "DoubleState",
-             "Protect", "SlowMotion", "TimeBreak", "Confusion", "HyperMode", "Teleporter",
-             "Coin", "NoTouch", "Paralyse", "Diamond", "StoneBub", "Present", "SpecialKey", "LevelKey")
-
-        c = ("bubble.normal", "bubble.double", "bubble.kill", "bubble.triple", "bubble.speedup", "bubble.speeddown",
-             "bubble.up", "bubble.state.ultimate", "bubble.state.double", "bubble.state.protect",
-             "bubble.state.slowmotion",
-             "bubble.state.timebreak", "bubble.state.confusion", "bubble.state.hypermode", "bubble.teleporter",
-             "bubble.coin", "bubble.state.notouch", "bubble.state.paralyse", "bubble.diamond", "bubble.stonebubble",
-             "bubble.present", "bubble.state.specialkey", "bubble.levelkey")
-
-        canvass = Canvas(self.temp["qbubbles:pause.frame"], bg=back, highlightthickness=0)
+        # self.temp["qbubbles:pause.s_frame"].place(
+        #     x=Registry.gameData["MiddleX"], y=Registry.gameData["MiddleY"] / 2 + 250, anchor='n', width=1000)
+        # self.temp["qbubbles:pause.sw"] = ScrolledWindow(
+        #     self.temp["qbubbles:pause.s_frame"], 1020, 321, height=321, width=1000)
+        #
+        # self.temp["qbubbles:pause.canv"] = self.temp["qbubbles:pause.sw"].canv
+        # self.temp["qbubbles:pause.canv"].config(bg=back)
+        # canv = self.temp["qbubbles:pause.canv"]
+        # # canv: Canvas
+        # # self.temp["qbubbles:pause.canvblurim"] = canv.create_image(
+        # #     0 - canv.winfo_x(), 70 - canv.winfo_y(), image=blurimtk, anchor='nw')
+        # self.temp["qbubbles:pause.sw"].scrollwindow.config(bg=back)
+        #
+        # self.temp["qbubbles:pause.frame"] = self.temp["qbubbles:pause.sw"].scrollwindow
+        #
+        # a = ("Normal", "Double", "Kill", "Triple", "SpeedUp", "SpeedDown", "Up", "Ultimate", "DoubleState",
+        #      "Protect", "SlowMotion", "TimeBreak", "Confusion", "HyperMode", "Teleporter",
+        #      "Coin", "NoTouch", "Paralyse", "Diamond", "StoneBub", "Present", "SpecialKey", "LevelKey")
+        #
+        # c = ("bubble.normal", "bubble.double", "bubble.kill", "bubble.triple", "bubble.speedup", "bubble.speeddown",
+        #      "bubble.up", "bubble.state.ultimate", "bubble.state.double", "bubble.state.protect",
+        #      "bubble.state.slowmotion",
+        #      "bubble.state.timebreak", "bubble.state.confusion", "bubble.state.hypermode", "bubble.teleporter",
+        #      "bubble.coin", "bubble.state.notouch", "bubble.state.paralyse", "bubble.diamond", "bubble.stonebubble",
+        #      "bubble.present", "bubble.state.specialkey", "bubble.levelkey")
+        #
+        # canvass = Canvas(self.temp["qbubbles:pause.frame"], bg=back, highlightthickness=0)
         x = 50
-        y = 50
+        y = Registry.gameData["MiddleY"] / 2 + 350
+        self.bubviewbacktk = bubviewbacktk
+        self.temp["qbubbles:pause.bubbleviewback"] = self.canvas.create_image(
+            0, Registry.gameData["MiddleY"] / 2 + 300, image=bubviewbacktk, anchor="nw")
+
+        # x17 = Registry.gameData["MiddleX"]
+        # y17 = Registry.gameData["MiddleY"] / 2 + 250
+        # print(x17, y17)
+        # # print(s_frame.winfo_y())
+        # # x18 = -(x17 / 2)
+        # # y18 = -(y17) + 70  #  (-y17 + 70)+y17/2
+        # # x18 = -(x17)
+        # # y18 = -(y17)
+        # # print(x18, y18)
+        # # self.temp["qbubbles:pause.canvblurim"] = canv.create_image(x18, y18, image=blurimtk, anchor='nw')
         self.temp["qbubbles:pause.bubble.icons"] = []
         self.temp["qbubbles:pause.bubble.texts"] = []
-        bubbles: List[Bubble] = Registry.get_bubbles()
+        bubbles: List[qbubbles.bubbles.Bubble] = Registry.get_bubbles()
         for i in range(len(bubbles)):
             # print(a[i], b[i])
             uname = bubbles[i].get_uname()
             bubble_icon = Registry.get_texture("qbubbles:bubble", uname, radius=50)
             # bubble_icon = Registry.get_texture("sprites", uname, "images")[50]
             self.temp["qbubbles:pause.bubble.icons"].append(
-                canvass.create_image(
-                    x, y, image=bubble_icon
+                self.canvas.create_image(
+                    x, y, image=bubble_icon, tags=("BubbleView",)
                 )
             )
-            print(x, y + 40, Registry.get_lname("bubble", uname.split(":")[-1], "name"), fore, font)
+            print(x, y + 40, Registry.get_lname("bubble", uname.replace(":", "."), "name"), fore, font)
 
-            lname = Registry.get_lname("bubble", uname.split(":")[-1], "name")
-            name = Registry.gameData["language"][lname] if lname in Registry.gameData["language"].keys() else lname
+            lname = Registry.get_lname("bubble", uname.replace(":", "."), "name")
+            # name = Registry.gameData["language"][lname] if lname in Registry.gameData["language"].keys() else lname
+            name = lname
 
             self.temp["qbubbles:pause.bubble.texts"].append(
-                canvass.create_text(
-                    x, y + 40, text=name, fill=fore, font=font.get_tuple()
+                self.canvas.create_text(
+                    x, y + 40, text=name, fill=fore, font=font.get_tuple(), tags=("BubbleView",)
                 )
             )
             # place_bubble(canvass, bub, x, y, 25, a[i])
 
-            if x > 900:
+            if x > (Registry.gameData["WindowWidth"] - 150):
                 x = 50
                 y += 100
             else:
                 x += 100
 
-        canvass.config(height=y + 70, width=1000)
-        canvass.pack(fill="y")
+        canvg_h = y + 70
 
-        self.temp["qbubbles:pause.canvass"] = canvass
-        self.temp["qbubbles:pause.back_to_menu"].pack(fill="x")
+        if canvg_h < 321:
+            canvg_h = 321
+
+        # canvass.config(height=canvg_h, width=1000)
+        # canvass.pack(fill="y")
+
+        self.temp["qbubbles:pause.canvass"] = None
+        # self.temp["qbubbles:pause.back_to_menu"].pack(fill="x")
 
         self.temp["qbubbles:pause.icon_id"] = self.canvas.create_image(
             Registry.gameData["MiddleX"], Registry.gameData["MiddleY"] / 2, image=Registry.get_icon("Pause"))
@@ -625,9 +669,24 @@ class Game(CanvasScene):
         PauseEvent(self, self.canvas, self.temp, pause=True)
         SaveEvent(self, self.saveName)
 
+        # self.temp["qbubbles:pause.bg"] = self.canvas.create_image(0, 70, image=blurimtk, anchor="nw")
+        self.blurimage = blurimtk
+
+        self.blurimageupdate = True
+        UpdateEvent.bind(self.on_updateblurimage)
+
+    def on_updateblurimage(self, evt: UpdateEvent):
+        if self.blurimageupdate:
+            pass
+            # self.temp["qbubbles:pause.bg"] = self.canvas.create_image(0, 70, image=self.blurimage, anchor="nw")
+            # canv = self.temp["qbubbles:pause.canvass"]
+            # self.temp["qbubbles:pause.canvblurim"] = canv.create_image(
+            #     0 - canv.winfo_x(), 70 - canv.winfo_y(), image=self.blurimage, anchor='nw')
+
     def unpause(self):
         """
         Unpauses the game.
+        TODO: Remove Bubble view and Bubble view background, when unpausing.
 
         :return:
         """
@@ -637,15 +696,21 @@ class Game(CanvasScene):
         # self.canvas.itemconfig(icons["pause"], state="hidden")
         # canvas.itemconfig(texts["pause"], text="")
 
-        self.temp["qbubbles:pause.back_to_menu"].destroy()
-        self.temp['qbubbles:pause.menu_frame'].destroy()
-        self.temp["qbubbles:pause.s_frame"].destroy()
+        self.temp["qbubbles:pause.back_to_menu"].delete()
+        # self.temp['qbubbles:pause.menu_frame'].destroy()
+        # self.temp["qbubbles:pause.s_frame"].destroy()
 
+        self.blurimageupdate = False
+        UpdateEvent.unbind(self.on_updateblurimage)
+
+        self.canvas.delete(self.temp["qbubbles:pause.bubbleviewback"])
         self.canvas.delete(self.temp["qbubbles:pause.icon_id"])
         self.canvas.delete(self.temp['qbubbles:pause.to_line'])
         # canvas.delete(temp['pause/bottom.line'])
-        self.canvas.delete(self.temp['qbubbles:pause.menu'])
+        # self.canvas.delete(self.temp['qbubbles:pause.menu'])
         self.canvas.delete(self.temp['qbubbles:pause.bg'])
+
+        self.canvas.delete("BubbleView")
 
         self.root.update()
 
@@ -815,7 +880,8 @@ class Game(CanvasScene):
 
     def on_update(self, evt: UpdateEvent):
         # TODO: Make this completely using events like CollisionEvent(...), or UpdateEvent
-        self.canvas.tag_raise(self.gameMap.player.id)
+        if not self._pauseMode:
+            self.canvas.tag_raise(self.gameMap.player.id)
 
         for index1 in range(len(self.gameMap.get_gameobjects())):
             for index2 in range(index1, len(self.gameMap.get_gameobjects())):
@@ -889,11 +955,11 @@ class Game(CanvasScene):
         self.canvas.itemconfig(t1, text="Reapply effects to player")
         self.canvas.itemconfig(t2, text="")
 
-        for effectdata in Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Effects"]:
-            effect: BaseEffect = Registry.get_effect(effectdata["id"])
-            appliedEffect: AppliedEffect = AppliedEffect(effect, self, effectdata["time_remaining"], effectdata["strength"])
-            self.gameMap.player.appliedEffects.append(appliedEffect)
-            self.gameMap.player.appliedEffectTypes.append(effect)
+        # for effectdata in Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Effects"]:
+        #     effect: BaseEffect = Registry.get_effect(effectdata["id"])
+        #     appliedEffect: AppliedEffect = AppliedEffect(effect, self, effectdata["duration"], effectdata["strength"])
+        #     self.gameMap.player.appliedEffects.append(appliedEffect)
+        #     self.gameMap.player.appliedEffectTypes.append(effect)
         if Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["score"] < 0:
             log.error("Game.main", "The 'Score' variable under zero.")
             Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["score"] = 0
@@ -902,7 +968,7 @@ class Game(CanvasScene):
 
         Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["keyactive"] = True
 
-        Logging.debug("GameScene", f"GameMap is Initalized: {Registry.saveData['Game']['GameMap']['initialized']}")
+        # Logging.debug("GameScene", f"GameMap is Initalized: {Registry.saveData['Game']['GameMap']['initialized']}")
 
         if Registry.saveData["Game"]["GameMap"]["initialized"] is False:
             FirstLoadEvent(self, t1, t2, self.saveName)

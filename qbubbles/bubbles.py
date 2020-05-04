@@ -2,6 +2,7 @@ import string
 from tkinter import Canvas
 from typing import Optional, List, NoReturn
 
+import qbubbles.effects
 from qbubbles.events import UpdateEvent, CleanUpEvent, CollisionEvent, PauseEvent
 
 from qbubbles.sprites import Sprite, SpriteData
@@ -46,7 +47,10 @@ class Bubble(object):
         return Registry.get_id_bubble(self)
 
     def __repr__(self) -> str:
-        return f"Bubble<{self.get_uname()}>"
+        return f"Bubble(<{self.get_uname()}>)"
+
+    def on_collision(self, bubbleobject: 'BubbleObject', other: 'Sprite'):
+        pass
 
 
 class BubbleObject(Sprite):
@@ -67,7 +71,8 @@ class BubbleObject(Sprite):
                                            "Position": (None, None)})
 
     def on_collision(self, evt: CollisionEvent):
-        pass
+        if evt.eventObject == self and evt.collidedObj != self:
+            self.baseClass.on_collision(self, evt.collidedObj)
 
     def on_pause(self, evt: PauseEvent):
         self._pause = evt.pause
@@ -154,7 +159,7 @@ class TripleBubble(Bubble):
     def __init__(self):
         super(TripleBubble, self).__init__()
 
-        self.priority = 15000
+        self.priority = 100000
 
         self.minRadius: int = 21
         self.maxRadius: int = 80
@@ -170,7 +175,7 @@ class DoubleStateBubble(Bubble):
     def __init__(self):
         super(DoubleStateBubble, self).__init__()
 
-        self.priority = 5000
+        self.priority = 15000
 
         self.minRadius: int = 21
         self.maxRadius: int = 80
@@ -182,12 +187,19 @@ class DoubleStateBubble(Bubble):
 
         self.set_uname("qbubbles:double_state")
 
+    def on_collision(self, bubbleobject: BubbleObject, other_object: Sprite):
+        if other_object.get_sname() == "qbubbles:player":
+            other_object: Player
+            scene = Registry.get_scene("Game")
+            other_object.start_effect(qbubbles.effects.ScoreMultiplierEffect(), scene,
+                                      scene.gameMap.randoms["qbubbles:effect.duration"][0].randint(12, 17), 2)
+
 
 class TripleStateBubble(Bubble):
     def __init__(self):
         super(TripleStateBubble, self).__init__()
 
-        self.priority = 500
+        self.priority = 10000
 
         self.minRadius: int = 21
         self.maxRadius: int = 80
@@ -198,6 +210,13 @@ class TripleStateBubble(Bubble):
         self.attackMultiplier: float = 0
 
         self.set_uname("qbubbles:triple_state")
+
+    def on_collision(self, bubbleobject: BubbleObject, other_object: Sprite):
+        if other_object.get_sname() == "qbubbles:player":
+            other_object: Player
+            scene = Registry.get_scene("Game")
+            other_object.start_effect(qbubbles.effects.ScoreMultiplierEffect(), scene,
+                                      scene.gameMap.randoms["qbubbles:effect.duration"][0].randint(7, 10), 3)
 
 
 class DamageBubble(Bubble):
@@ -215,6 +234,25 @@ class DamageBubble(Bubble):
         self.attackMultiplier: float = 1
 
         self.set_uname("qbubbles:damage_bubble")
+
+        # raise RuntimeError("This is shit")
+
+
+class HealBubble(Bubble):
+    def __init__(self):
+        super(HealBubble, self).__init__()
+
+        self.priority = 100000
+
+        self.minRadius: int = 21
+        self.maxRadius: int = 80
+        self.minSpeed: int = 40
+        self.maxSpeed: int = 96
+
+        self.scoreMultiplier: float = 0.5
+        self.attackMultiplier: float = -1
+
+        self.set_uname("qbubbles:healer_bubble")
 
         # raise RuntimeError("This is shit")
 

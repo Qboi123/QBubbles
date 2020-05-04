@@ -78,12 +78,12 @@ def build():
     compile_dir("qbubbles/", "obj/code/qbubbles/")
     # compile_file("__main__.py", "obj/__main__.pyc")
     copy_file("__main__.py", "obj/code/__main__.py")
-    create_pyz("obj/code/", "bin/QBubbles-1.0_alpha1.pyz")
+    create_pyz("obj/code/", "bin/QBubbles-1.0_alpha2.pyz")
 
     copy_folder("qbubbles/config", "obj/data/config")
     copy_folder("qbubbles/lang", "obj/data/lang")
     copy_folder("qbubbles/assets", "obj/data/assets")
-    create_dataarchive("obj/data/", "bin/QBubbles-1.0_alpha1-data.zip")
+    create_dataarchive("obj/data/", "bin/QBubbles-1.0_alpha2-data.zip")
 
 
 if __name__ == '__main__':

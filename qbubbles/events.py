@@ -40,18 +40,19 @@ class ExperienceEvent(Event):
         super(ExperienceEvent, self).__init__(scene)
 
     @classmethod
-    def bind(cls, func):
+    def bind(cls, func: _t.Callable[['ExperienceEvent'], _t.Any]):
         cls._handlers.append(func)
         # print(func)
         return func
 
     @classmethod
-    def unbind(cls, func):
+    def unbind(cls, func: _t.Callable[['ExperienceEvent'], _t.Any]):
         cls._handlers.remove(func)
         # print(f"Unbind: {func.__name__}")
         return func
 
 
+# noinspection PyUnusedLocal
 class PreInitializeEvent(Event):
     _handlers = list()
 
@@ -67,18 +68,19 @@ class PreInitializeEvent(Event):
         super(Event, self).__init__()
 
     @classmethod
-    def bind(cls, func):
+    def bind(cls, func: _t.Callable[['PreInitializeEvent'], _t.Any]):
         cls._handlers.append(func)
         # print(func)
         return func
 
     @classmethod
-    def unbind(cls, func):
+    def unbind(cls, func: _t.Callable[['PreInitializeEvent'], _t.Any]):
         cls._handlers.remove(func)
         # print(f"Unbind: {func.__name__}")
         return func
 
 
+# noinspection PyUnusedLocal
 class InitializeEvent(Event):
     _handlers = list()
 
@@ -94,18 +96,19 @@ class InitializeEvent(Event):
         super(Event, self).__init__()
 
     @classmethod
-    def bind(cls, func):
+    def bind(cls, func: _t.Callable[['InitializeEvent'], _t.Any]):
         cls._handlers.append(func)
         # print(func)
         return func
 
     @classmethod
-    def unbind(cls, func):
+    def unbind(cls, func: _t.Callable[['InitializeEvent'], _t.Any]):
         cls._handlers.remove(func)
         # print(f"Unbind: {func.__name__}")
         return func
 
 
+# noinspection PyUnusedLocal
 class PostInitializeEvent(Event):
     _handlers = list()
 
@@ -121,13 +124,13 @@ class PostInitializeEvent(Event):
         super(Event, self).__init__()
 
     @classmethod
-    def bind(cls, func):
+    def bind(cls, func: _t.Callable[['PostInitializeEvent'], _t.Any]):
         cls._handlers.append(func)
         # print(func)
         return func
 
     @classmethod
-    def unbind(cls, func):
+    def unbind(cls, func: _t.Callable[['PostInitializeEvent'], _t.Any]):
         cls._handlers.remove(func)
         # print(f"Unbind: {func.__name__}")
         return func
@@ -143,13 +146,13 @@ class ResizeEvent(Event):
         super(ResizeEvent, self).__init__(scene)
 
     @classmethod
-    def bind(cls, func):
+    def bind(cls, func: _t.Callable[['ResizeEvent'], _t.Any]):
         cls._handlers.append(func)
         # print(func)
         return func
 
     @classmethod
-    def unbind(cls, func):
+    def unbind(cls, func: _t.Callable[['ResizeEvent'], _t.Any]):
         cls._handlers.remove(func)
         # print(f"Unbind: {func.__name__}")
         return func
@@ -165,13 +168,13 @@ class SavedataReadedEvent(Event):
             handler(data)
 
     @classmethod
-    def bind(cls, func):
+    def bind(cls, func: _t.Callable[['SavedataReadedEvent'], _t.Any]):
         cls._handlers.append(func)
         # print(func)
         return func
 
     @classmethod
-    def unbind(cls, func):
+    def unbind(cls, func: _t.Callable[['SavedataReadedEvent'], _t.Any]):
         cls._handlers.remove(func)
         # print(f"Unbind: {func.__name__}")
         return func
@@ -179,6 +182,7 @@ class SavedataReadedEvent(Event):
 
 class UpdatableEvent(Event):
     _handlers = list()
+
     @classmethod
     def bind(cls, func):
         cls._handlers.append(func)
@@ -192,7 +196,7 @@ class UpdatableEvent(Event):
         return func
 
 
-# noinspection PyMethodOverriding
+# noinspection PyMethodOverriding,PyShadowingBuiltins
 class CanvasIDEvent(Event):
     _handlers = dict()
     event = ""
@@ -218,6 +222,7 @@ class CanvasIDEvent(Event):
         return func
 
 
+# noinspection PyShadowingBuiltins
 class MouseEnterEvent(CanvasIDEvent):
     _handlers = dict()
     event = "<Enter>"
@@ -245,7 +250,7 @@ class MouseEnterEvent(CanvasIDEvent):
         return func
 
 
-# noinspection PyMethodOverriding
+# noinspection PyMethodOverriding,PyShadowingBuiltins
 class MouseLeaveEvent(CanvasIDEvent):
     _handlers = dict()
     event = "<Leave>"
@@ -283,13 +288,13 @@ class KeyPressEvent(Event):
         super(KeyPressEvent, self).__init__(scene)
 
     @classmethod
-    def bind(cls, func):
+    def bind(cls, func: _t.Callable[['KeyPressEvent'], _t.Any]):
         cls._handlers.append(func)
         # print(func)
         return func
 
     @classmethod
-    def unbind(cls, func):
+    def unbind(cls, func: _t.Callable[['KeyPressEvent'], _t.Any]):
         cls._handlers.remove(func)
         # print(f"Unbind: {func.__name__}")
         return func
@@ -304,13 +309,13 @@ class SpriteDamageEvent(Event):
         super(SpriteDamageEvent, self).__init__(scene)
 
     @classmethod
-    def bind(cls, func):
+    def bind(cls, func: _t.Callable[['SpriteDamageEvent'], _t.Any]):
         cls._handlers.append(func)
         # print(func)
         return func
 
     @classmethod
-    def unbind(cls, func):
+    def unbind(cls, func: _t.Callable[['SpriteDamageEvent'], _t.Any]):
         cls._handlers.remove(func)
         # print(f"Unbind: {func.__name__}")
         return func
@@ -330,13 +335,13 @@ class MapInitializeEvent(Event):
         super(MapInitializeEvent, self).__init__(scene)
 
     @classmethod
-    def bind(cls, func):
+    def bind(cls, func: _t.Callable[['MapInitializeEvent'], _t.Any]):
         cls._handlers.append(func)
         # print(func)
         return func
 
     @classmethod
-    def unbind(cls, func):
+    def unbind(cls, func: _t.Callable[['MapInitializeEvent'], _t.Any]):
         cls._handlers.remove(func)
         # print(f"Unbind: {func.__name__}")
         return func
@@ -356,13 +361,13 @@ class FirstLoadEvent(Event):
         super(FirstLoadEvent, self).__init__(scene)
 
     @classmethod
-    def bind(cls, func):
+    def bind(cls, func: _t.Callable[['FirstLoadEvent'], _t.Any]):
         cls._handlers.append(func)
         # print(func)
         return func
 
     @classmethod
-    def unbind(cls, func):
+    def unbind(cls, func: _t.Callable[['FirstLoadEvent'], _t.Any]):
         cls._handlers.remove(func)
         # print(f"Unbind: {func.__name__}")
         return func
@@ -380,13 +385,13 @@ class SaveEvent(Event):
         super(SaveEvent, self).__init__(scene)
 
     @classmethod
-    def bind(cls, func):
+    def bind(cls, func: _t.Callable[['SaveEvent'], _t.Any]):
         cls._handlers.append(func)
         # print(func)
         return func
 
     @classmethod
-    def unbind(cls, func):
+    def unbind(cls, func: _t.Callable[['SaveEvent'], _t.Any]):
         cls._handlers.remove(func)
         # print(f"Unbind: {func.__name__}")
         return func
@@ -404,13 +409,13 @@ class LoadCompleteEvent(Event):
         super(LoadCompleteEvent, self).__init__(scene)
 
     @classmethod
-    def bind(cls, func):
+    def bind(cls, func: _t.Callable[['LoadCompleteEvent'], _t.Any]):
         cls._handlers.append(func)
         # print(func)
         return func
 
     @classmethod
-    def unbind(cls, func):
+    def unbind(cls, func: _t.Callable[['LoadCompleteEvent'], _t.Any]):
         cls._handlers.remove(func)
         # print(f"Unbind: {func.__name__}")
         return func
@@ -428,13 +433,13 @@ class GameExitEvent(Event):
         super(GameExitEvent, self).__init__(scene)
 
     @classmethod
-    def bind(cls, func):
+    def bind(cls, func: _t.Callable[['GameExitEvent'], _t.Any]):
         cls._handlers.append(func)
         # print(func)
         return func
 
     @classmethod
-    def unbind(cls, func):
+    def unbind(cls, func: _t.Callable[['GameExitEvent'], _t.Any]):
         cls._handlers.remove(func)
         # print(f"Unbind: {func.__name__}")
         return func
@@ -450,13 +455,13 @@ class CleanUpEvent(Event):
         super(CleanUpEvent, self).__init__(scene)
 
     @classmethod
-    def bind(cls, func):
+    def bind(cls, func: _t.Callable[['CleanUpEvent'], _t.Any]):
         cls._handlers.append(func)
         # print(func)
         return func
 
     @classmethod
-    def unbind(cls, func):
+    def unbind(cls, func: _t.Callable[['CleanUpEvent'], _t.Any]):
         cls._handlers.remove(func)
         # print(f"Unbind: {func.__name__}")
         return func
@@ -472,13 +477,13 @@ class KeyReleaseEvent(Event):
         super(KeyReleaseEvent, self).__init__(scene)
 
     @classmethod
-    def bind(cls, func):
+    def bind(cls, func: _t.Callable[['KeyReleaseEvent'], _t.Any]):
         cls._handlers.append(func)
         # print(func)
         return func
 
     @classmethod
-    def unbind(cls, func):
+    def unbind(cls, func: _t.Callable[['KeyReleaseEvent'], _t.Any]):
         cls._handlers.remove(func)
         # print(f"Unbind: {func.__name__}")
         return func
@@ -496,18 +501,19 @@ class UpdateEvent(Event):
         super(UpdateEvent, self).__init__(scene)
 
     @classmethod
-    def bind(cls, func: _t.Callable):
+    def bind(cls, func: _t.Callable[['UpdateEvent'], _t.Any]):
         cls._handlers.append(func)
         # print(func)
         return func
 
     @classmethod
-    def unbind(cls, func: _t.Callable):
+    def unbind(cls, func: _t.Callable[['UpdateEvent'], _t.Any]):
         cls._handlers.remove(func)
         # print(f"Unbind: {func.__name__}")
         return func
 
 
+# noinspection PyUnusedLocal
 class CollisionEvent(Event):
     _handlers = list()
 
@@ -515,6 +521,7 @@ class CollisionEvent(Event):
         self.eventObject = eventobj
         self.collidedObj = collidedobj
         self.canvas: _tk.Canvas = canvas
+        self.scene: _Scene = scene
 
         super(Event, self).__init__()
         for handler in self._handlers:
@@ -527,18 +534,19 @@ class CollisionEvent(Event):
                     self.cancel = True
 
     @classmethod
-    def bind(cls, func: _t.Callable):
+    def bind(cls, func: _t.Callable[['CollisionEvent'], _t.Any]):
         cls._handlers.append(func)
         # print(func)
         return func
 
     @classmethod
-    def unbind(cls, func: _t.Callable):
+    def unbind(cls, func: _t.Callable[['CollisionEvent'], _t.Any]):
         cls._handlers.remove(func)
         # print(f"Unbind: {func.__name__}")
         return func
 
 
+# noinspection PyUnusedLocal
 class PauseEvent(Event):
     """
     For pausing / unpausing the game.
@@ -557,17 +565,53 @@ class PauseEvent(Event):
 
         self.canvas: _tk.Canvas = canvas
         self.pause = pause
+        self.temp = temp
 
         super(PauseEvent, self).__init__(scene)
 
     @classmethod
-    def bind(cls, func: _t.Callable):
+    def bind(cls, func: _t.Callable[['PauseEvent'], _t.Any]):
         cls._handlers.append(func)
         # print(func)
         return func
 
     @classmethod
-    def unbind(cls, func: _t.Callable):
+    def unbind(cls, func: _t.Callable[['PauseEvent'], _t.Any]):
+        cls._handlers.remove(func)
+        # print(f"Unbind: {func.__name__}")
+        return func
+
+
+class EffectApplyEvent(Event):
+    """
+    For pausing / unpausing the game.
+    """
+    _handlers = list()
+
+    def __init__(self, scene, canvas, appliedeffect):
+        """
+        For pausing / unpausing the game.
+
+        :param scene:
+        :param canvas:
+        :param temp:
+        :param pause:
+        """
+
+        self.canvas: _tk.Canvas = canvas
+        self.appliedEffect = appliedeffect
+        self.sprite = self.appliedEffect.sprite
+
+        super(EffectApplyEvent, self).__init__(scene)
+
+    @classmethod
+    def bind(cls, func: _t.Callable[['PauseEvent'], _t.Any]):
+        cls._handlers.append(func)
+        # print(func)
+        return func
+
+    @classmethod
+    def unbind(cls, func: _t.Callable[['PauseEvent'], _t.Any]):
         cls._handlers.remove(func)
         # print(f"Unbind: {func.__name__}")
         return func
@@ -655,13 +699,13 @@ class XInputEvent(UpdatableEvent):
             super(UpdatableEvent, self).__init__(scene)
 
     @classmethod
-    def bind(cls, func):
+    def bind(cls, func: _t.Callable[['XInputEvent'], _t.Any]):
         cls._handlers.append(func)
         # print(func)
         return func
 
     @classmethod
-    def unbind(cls, func):
+    def unbind(cls, func: _t.Callable[['XInputEvent'], _t.Any]):
         cls._handlers.remove(func)
         # print(f"Unbind: {func.__name__}")
         return func

@@ -5,7 +5,7 @@ import time
 from tkinter import Tk, Toplevel, Frame, Label, font
 from typing import Optional, Callable, Union
 
-from qbubbles.game import default_launchercfg
+import qbubbles.game
 from qbubbles.load import Load
 from qbubbles.registry import Registry
 
@@ -208,7 +208,7 @@ class Main(Toplevel):
         """
 
         if "--debug" in sys.argv:
-            Registry.gameData["launcherConfig"] = default_launchercfg
+            Registry.gameData["launcherConfig"] = qbubbles.game.default_launchercfg
             Registry.gameData["launcherConfig"]["debug"] = True
             self.debug = True
 

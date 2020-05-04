@@ -111,7 +111,7 @@ class Registry(object):
                              f"{'an' if uname.__class__.__name__.startswith(('e', 'a', 'i', 'o', 'u')) else 'a'} "
                              f"{uname.__class__.__name__}-object")
         # printerr(f"{repr(effect)} is not a EffectObject Representaion")
-        if not (repr(effect).startswith("EffectObject<") and repr(effect).endswith(">")):
+        if not (repr(effect).startswith("EffectObject(<") and repr(effect).endswith(">)")):
             raise ValueError(f"Representation is not of a Effect-object, or is this not a subclass of a Effect-object?")
         cls._registryEffects[uname] = effect
         
@@ -178,7 +178,7 @@ class Registry(object):
             raise TypeError(f"Bubble ID must be a str-object not "
                              f"{'an' if id_.__class__.__name__.startswith(('e', 'a', 'i', 'o', 'u')) else 'a'} "
                              f"{id_.__class__.__name__}-object")
-        if not (repr(bubbleobj).startswith("Bubble<") and repr(bubbleobj).endswith(">")):
+        if not (repr(bubbleobj).startswith("Bubble(<") and repr(bubbleobj).endswith(">)")):
             raise ValueError(f"Representation is not of a Bubble-object, or is this not a subclass of a Bubble-object?")
         cls._registryBubbles[id_] = bubbleobj
 

@@ -11,4 +11,5 @@ def init_bubbles() -> List[Bubble]:
     BUBBLES.append(DoubleStateBubble())
     BUBBLES.append(TripleStateBubble())
     BUBBLES.append(DamageBubble())
+    BUBBLES.append(HealBubble())
     return BUBBLES
