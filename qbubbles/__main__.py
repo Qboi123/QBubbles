@@ -160,7 +160,7 @@ class Main(Toplevel):
         try:
             os.chdir(os.path.split(__file__)[0])  # ...\qbubbles
         except FileNotFoundError:
-            os.chdir(os.path.join(Registry.gameData["launcherConfig"]["gameDir"], "data/1.0-alpha1"))
+            os.chdir(os.path.join(Registry.gameData["launcherConfig"]["gameDir"], "data/1.0-alpha3"))
 
         self.fakeRoot = FakeWindow()
 

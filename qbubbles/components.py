@@ -321,7 +321,7 @@ class Store(CanvasScene):
                                             font=(font, 18))
 
         # Setups items and price.
-        info = Reader("versions/"+launcher_cfg["versionDir"]+"/config/store.nzt").get_decoded()
+        info = Reader("versions/"+launcher_cfg["versionDir"]+"/config/store.dill").get_decoded()
 
         i = 0
 
@@ -443,7 +443,7 @@ class Store(CanvasScene):
             stats["diamonds"] -= self.price[self.selected]
             stats["coins"] -= int(self.canvas.itemcget(self.coins[self.selected], "text"))
             if self.selected == 0:
-                Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["score"] += 1000
+                Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["score"] += 1000
             if self.selected == 1:
                 stats["teleport"] += 1
             if self.selected == 2:
@@ -485,13 +485,13 @@ class Store(CanvasScene):
                 stats["scorestate"] = 2
                 stats["scorestate_time"] = time() + randint(20, 40)
             if self.selected == 10:
-                Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["score"] += 10
+                Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["score"] += 10
             if self.selected == 11:
-                Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["score"] += 100
+                Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["score"] += 100
             if self.selected == 12:
-                Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["score"] += 200
+                Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["score"] += 200
             if self.selected == 13:
-                Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["score"] += 500
+                Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["score"] += 500
             self.canvas.itemconfig(self.vDiamonds, text="Diamonds: " + str(stats["diamonds"]))
             modes["window"] = False
         else:

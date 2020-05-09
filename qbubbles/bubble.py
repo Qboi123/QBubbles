@@ -97,8 +97,8 @@ def create_bubble(stats, config, bub, c, bubble, i=None, x=None, y=None, r=None,
         i = randint(0, 1600)
     else:
         i = i
-    if Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["level"] <= 100:
-        level_dat = Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["level"]
+    if Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["level"] <= 100:
+        level_dat = Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["level"]
     else:
         level_dat = 100
     if 0 <= i < 800:
@@ -132,7 +132,7 @@ def create_bubble(stats, config, bub, c, bubble, i=None, x=None, y=None, r=None,
         spd = randint(int(stats["Sprites"]["qbubbles:bubble"]["speedMultiplier"]), int(stats["Sprites"]["qbubbles:bubble"]["speedMultiplier"]) + 3)
         hardness = 1
     elif 960 <= i < 965:
-        if Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["lives"] < 7:
+        if Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["health"] < 7:
             ids = [c.create_image(x, y, image=bub["Up"][r * 2])]
             act = "Up"
             spd = randint(int(stats["Sprites"]["qbubbles:bubble"]["speedMultiplier"]), int(stats["Sprites"]["qbubbles:bubble"]["speedMultiplier"]) + 3)
@@ -197,30 +197,30 @@ def create_bubble(stats, config, bub, c, bubble, i=None, x=None, y=None, r=None,
         act = "ShotSpdStat"
         spd = randint(int(stats["Sprites"]["qbubbles:bubble"]["speedMultiplier"]) - 3, int(stats["Sprites"]["qbubbles:bubble"]["speedMultiplier"]))
         hardness = 1
-    elif 1120 <= i < 1121 and Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["level"] > 19:
+    elif 1120 <= i < 1121 and Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["level"] > 19:
         ids = [c.create_image(x, y, image=bub["Teleporter"][r * 2])]
         act = "Teleporter"
         spd = randint(int(stats["Sprites"]["qbubbles:bubble"]["speedMultiplier"]), int(stats["Sprites"]["qbubbles:bubble"]["speedMultiplier"]) + 2)
         hardness = 1
-    elif 1121 <= i < 1123 and Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["level"] > 4:
+    elif 1121 <= i < 1123 and Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["level"] > 4:
         ids = [c.create_image(x, y, image=bub["Diamond"][36])]
         r = 18
         act = "Diamond"
         spd = randint(int(stats["Sprites"]["qbubbles:bubble"]["speedMultiplier"]) + 2, int(stats["Sprites"]["qbubbles:bubble"]["speedMultiplier"]) + 4)
         hardness = 1
-    elif 1124 <= i < 1130 and Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["level"] > 4:
+    elif 1124 <= i < 1130 and Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["level"] > 4:
         ids = [c.create_image(x, y, image=bub["Coin"])]
         r = 20
         act = "Coin"
         spd = randint(int(stats["Sprites"]["qbubbles:bubble"]["speedMultiplier"]), int(stats["Sprites"]["qbubbles:bubble"]["speedMultiplier"]) + 2)
         hardness = 2
-    elif 1130 <= i < 1150 and Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["level"] > 4:
+    elif 1130 <= i < 1150 and Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["level"] > 4:
         r = 20
         ids = [c.create_image(x, y, image=bub["NoTouch"][r * 2])]
         act = "NoTouch"
         spd = randint(int(stats["Sprites"]["qbubbles:bubble"]["speedMultiplier"]), int(stats["Sprites"]["qbubbles:bubble"]["speedMultiplier"]) + 2)
         hardness = 1
-    elif 1150 <= i < 1160 and Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["level"] > 4:
+    elif 1150 <= i < 1160 and Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["level"] > 4:
         r = 20
         ids = [c.create_image(x, y, image=bub["Present"][40])]
         act = "Present"
@@ -422,39 +422,39 @@ class Collision:
         :return:
         """
         if action == "Normal":
-            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["score"] += bubscore * stats["Effects"]["scorestate"]
+            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["score"] += bubscore * stats["Effects"]["scorestate"]
         if action == "Double":
-            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["score"] += bubscore * 2 * stats["Effects"]["scorestate"]
+            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["score"] += bubscore * 2 * stats["Effects"]["scorestate"]
         if action == "Triple":
-            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["score"] += bubscore * 3 * stats["Effects"]["scorestate"]
+            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["score"] += bubscore * 3 * stats["Effects"]["scorestate"]
         if (not stats["Effects"]["secure"]) and accept_negative:
             if action == "Kill":
-                Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["lives"] -= 1
+                Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["health"] -= 1
             if action == "Min":
-                Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["score"] -= bubscore
+                Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["score"] -= bubscore
             if action == "SpeedDown":
-                if Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["speed"] == 5:
+                if Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["speed"] == 5:
                     return
-                Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["speed"] -= 5
+                Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["speed"] -= 5
             if action == "Confusion":
                 State.set_state(canvas, log, stats, "Confusion", backgrounds)
             if action == "Paralyse":
                 State.set_state(canvas, log, stats, "Paralyse", backgrounds)
             if action == "NoTouch":
-                Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["score"] += bubscore * stats["Effects"]["scorestate"]
+                Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["score"] += bubscore * stats["Effects"]["scorestate"]
                 State.set_state(canvas, log, stats, action, backgrounds)
         if action == "DoubleState":
             State.set_state(canvas, log, stats, action, backgrounds)
         if action == "TripleState":
             State.set_state(canvas, log, stats, action, backgrounds)
         if action == "SpeedUp":
-            if Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["speed"] == 20:
+            if Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["speed"] == 20:
                 return
-            elif Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["speed"] == 25:
+            elif Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["speed"] == 25:
                 return
-            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["speed"] += 5
+            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["speed"] += 5
         if action == "Up":
-            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["lives"] += 1
+            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["health"] += 1
         if action == "Protect":
             State.set_state(canvas, log, stats, action, backgrounds)
         if action == "SlowMotion":
@@ -462,17 +462,17 @@ class Collision:
         if action == "TimeBreak":
             State.set_state(canvas, log, stats, action, backgrounds)
         if action == "Ultimate":
-            if Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["lives"] < 7:
-                Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["lives"] += 1
-            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["speed"] = 25
+            if Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["health"] < 7:
+                Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["health"] += 1
+            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["speed"] = 25
             State.set_state(canvas, log, stats, action, backgrounds)
         if action == "HyperMode":
-            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["lives"] += 2
-            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["speed"] = 25
-            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["score"] += bubscore * 30 * stats["Effects"]["scorestate"]
+            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["health"] += 2
+            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["speed"] = 25
+            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["score"] += bubscore * 30 * stats["Effects"]["scorestate"]
             State.set_state(canvas, log, stats, action, backgrounds)
         if action == "ShotSpdStat":
-            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["score"] += bubscore * stats["Effects"]["scorestate"]
+            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["score"] += bubscore * stats["Effects"]["scorestate"]
             State.set_state(canvas, log, stats, action, backgrounds)
         if action == "Diamond":
             Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Money"]["diamonds"] += 1
@@ -481,12 +481,12 @@ class Collision:
         if action == "Teleporter":
             Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Abilities"]["teleports"] += 1
         if action == "StoneBub":
-            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["score"] += int((bubscore * bubble["bub-hardness"][index]))
+            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["score"] += int((bubscore * bubble["bub-hardness"][index]))
         if action == "LevelKey":
-            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["level"] += 1
+            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["level"] += 1
             # clean_level_keys()
             bubble["key-active"] = False
-            view_level(canvas, root, texts, Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["level"])
+            view_level(canvas, root, texts, Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["level"])
         if action == "Present":
             commands["present"] = True
         # play_sound("versions/"+launcher_config["versionDir"]+"/assets/sounds/bubpop.mp3")

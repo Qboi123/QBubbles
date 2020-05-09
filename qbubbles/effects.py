@@ -238,10 +238,10 @@ class DefenceBoostEffect(BaseEffect):
         super(DefenceBoostEffect, self).__init__()
 
     def on_apply(self, effect: 'AppliedEffect', sprite):
-        sprite.defenceMultiplier += effect.strength * 2
+        sprite.defenseMultiplier += effect.strength * 2
 
     def on_stop(self, effect: 'AppliedEffect', sprite):
-        sprite.defenceMultiplier -= effect.strength * 2
+        sprite.defenseMultiplier -= effect.strength * 2
 
 
 class ScoreMultiplierEffect(BaseEffect):

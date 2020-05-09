@@ -21,13 +21,13 @@ class StoreItemCompiler(object):
 
                 from qbubbles import nzt
                 import os
-                os.remove("assets/store_data.nzt")
-                file = nzt.NZTFile("assets/store_data.nzt", "w")
+                os.remove("assets/store_data.dill")
+                file = nzt.NZTFile("assets/store_data.dill", "w")
                 file.data = data
                 file.save()
                 file.close()
                 self.data = data
-                self.file = "assets/store_data.nzt"
+                self.file = "assets/store_data.dill"
                 self.mode = "w"
             elif type(args[0]) == dict:
                 data = args[0]
@@ -35,13 +35,13 @@ class StoreItemCompiler(object):
 
                 from qbubbles import nzt
                 import os
-                os.remove("assets/store_data.nzt")
-                file = nzt.NZTFile("assets/store_data.nzt", "w")
+                os.remove("assets/store_data.dill")
+                file = nzt.NZTFile("assets/store_data.dill", "w")
                 file.data = data
                 file.save()
                 file.close()
                 self.data = data
-                self.file = "assets/store_data.nzt"
+                self.file = "assets/store_data.dill"
                 self.mode = "w"
         elif len(kwargs.keys()) == 1:
             if "json" in kwargs.keys():
@@ -53,13 +53,13 @@ class StoreItemCompiler(object):
 
                 from qbubbles import nzt
                 import os
-                os.remove("assets/store_data.nzt")
-                file = nzt.NZTFile("assets/store_data.nzt", "w")
+                os.remove("assets/store_data.dill")
+                file = nzt.NZTFile("assets/store_data.dill", "w")
                 file.data = data
                 file.save()
                 file.close()
                 self.data = data
-                self.file = "assets/store_data.nzt"
+                self.file = "assets/store_data.dill"
                 self.mode = "w"
             elif "assets" in kwargs.keys():
                 data = kwargs["assets"]
@@ -67,13 +67,13 @@ class StoreItemCompiler(object):
 
                 from qbubbles import nzt
                 import os
-                os.remove("assets/store_data.nzt")
-                file = nzt.NZTFile("assets/store_data.nzt", "w")
+                os.remove("assets/store_data.dill")
+                file = nzt.NZTFile("assets/store_data.dill", "w")
                 file.data = data
                 file.save()
                 file.close()
                 self.data = data
-                self.file = "assets/store_data.nzt"
+                self.file = "assets/store_data.dill"
                 self.mode = "w"
 
 

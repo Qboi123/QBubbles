@@ -356,10 +356,10 @@ class SavesMenu(_scenemgr.Scene):
 
         # Prepare info variables
         for i in names.copy():
-            if not os.path.exists(f"{_reg.Registry.gameData['launcherConfig']['gameDir']}saves/" + i + "/bubble.nzt"):
+            if not os.path.exists(f"{_reg.Registry.gameData['launcherConfig']['gameDir']}saves/" + i + "/bubble.dill"):
                 names.remove(i)
                 continue
-            mtime = os.path.getmtime(f"{_reg.Registry.gameData['launcherConfig']['gameDir']}saves/" + i + "/bubble.nzt")
+            mtime = os.path.getmtime(f"{_reg.Registry.gameData['launcherConfig']['gameDir']}saves/" + i + "/bubble.dill")
             a = time.localtime(mtime)
 
             b = list(a)
@@ -378,7 +378,7 @@ class SavesMenu(_scenemgr.Scene):
             infos["dates"].append(tme_var)
 
             a = _conf.Reader(
-                f"{_reg.Registry.gameData['launcherConfig']['gameDir']}saves/" + i + "/game.nzt").get_decoded()
+                f"{_reg.Registry.gameData['launcherConfig']['gameDir']}saves/" + i + "/game.dill").get_decoded()
 
             try:
                 infos["score"].append(a["Player"]["score"])
@@ -857,7 +857,7 @@ class SavesMenu(_scenemgr.Scene):
 
         try:
             _temp_0002 = _conf.Reader(
-                f"{_reg.Registry.gameData['launcherConfig']['gameDir']}saves/{src}/game.nzt").get_decoded()
+                f"{_reg.Registry.gameData['launcherConfig']['gameDir']}saves/{src}/game.dill").get_decoded()
             game_map = _reg.Registry.get_gamemap(_temp_0002["GameMap"]["id"])
             seed = _temp_0002["GameMap"]["seed"]
 
@@ -1092,7 +1092,7 @@ class CrashScene(_scenemgr.CanvasScene):
             font=font2)
         self.frame2 = _tk.Frame(self.frame, bg="#a70000", height=root.tkScale(350), width=root.tkScale(1000))
         self.frame2.place(x=mx, y=my - root.tkScale(30), anchor="n", height=root.tkScale(350), width=root.tkScale(1000))
-        self.t6 = _tk.Text(self.frame2, relief="flat", border=0, bd=root.tkScale(5), state="disabled", bg="#a70000",
+        self.t6 = _tk.Text(self.frame2, relief="flat", border=0, bd=root.tkScale(5), state="disabled", bg="#ca0000",
                            foreground="#ffa7a7",
                            font=font3, selectforeground="#ffffff", selectbackground="#ff0000")
         self.t6.pack(side="left", fill="both", expand=True)

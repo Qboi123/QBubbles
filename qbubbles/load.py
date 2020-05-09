@@ -48,7 +48,7 @@ class Load(_scenemngr.CanvasScene):
     # noinspection PyPep8Naming
     def initialize(self):
         config_ = _config.Reader(
-            "config/startup.nzt").get_decoded()
+            "config/startup.dill").get_decoded()
 
         _gameIO.Logging(_os.path.join(_reg.Registry.gameData['launcherConfig']['gameDir'], "logs"))
         _gameIO.Logging.info("GameLoader", "Logging started.")

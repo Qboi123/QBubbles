@@ -1,5 +1,5 @@
 import os
-import pickle
+import dill as pickle
 import zipfile
 from typing import Optional, Union
 

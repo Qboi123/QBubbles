@@ -486,7 +486,7 @@ class Registry(object):
 
     @classmethod
     def register_modobject(cls, modid: str, name: str, version: str, func: object):
-        # print(modid, name, version, func)
+        # print(addonid, name, version, func)
         if modid in cls._registryMods.keys():
             path = inspect.getfile(func)
             raise DuplicateAddonError(modid, name, version, path, func)

@@ -446,7 +446,7 @@ class Game(CanvasScene):
         gameDir = Registry.gameData['launcherConfig']['gameDir']
 
         # Reload stats with the reader.
-        Registry.saveData["Game"] = Reader(f"{gameDir}saves/{self.saveName}/game.nzt").get_decoded()
+        Registry.saveData["Game"] = Reader(f"{gameDir}saves/{self.saveName}/game.dill").get_decoded()
 
         # Game Maps
         gameMap = Registry.get_gamemap(Registry.saveData["Game"]["GameMap"]["id"])
@@ -879,50 +879,53 @@ class Game(CanvasScene):
             sleep(2)
 
     def on_update(self, evt: UpdateEvent):
-        # TODO: Make this completely using events like CollisionEvent(...), or UpdateEvent
         if not self._pauseMode:
             self.canvas.tag_raise(self.gameMap.player.id)
+
+        # TODO: Check if collision is needed in pause mode, and if so remove the if statement below.
+        if self._pauseMode:
+            return
 
         for index1 in range(len(self.gameMap.get_gameobjects())):
             for index2 in range(index1, len(self.gameMap.get_gameobjects())):
                 if index1 != index2:
-                    gameObj1: Sprite = self.gameMap.get_gameobjects()[index1]
-                    gameObj2: Sprite = self.gameMap.get_gameobjects()[index2]
-                    if gameObj1 != gameObj2:
+                    game_obj1: Sprite = self.gameMap.get_gameobjects()[index1]
+                    game_obj2: Sprite = self.gameMap.get_gameobjects()[index2]
+                    if game_obj1 != game_obj2:
                         # print(f"DISTANCE: {gameObj1.distance(gameObj2)}")
                         # print(f"DISTANCE CALC: {gameObj1.radius + gameObj2.radius}")
                         # if type(gameObj1) != Player:
                         #     print(gameObj1.baseRadius)
                         # elif type(gameObj2) != Player:
                         #     print(gameObj2.baseRadius)
-                        if gameObj1.distance(gameObj2) < (gameObj1.baseRadius + gameObj2.baseRadius):
-                            CollisionEvent(self, gameObj1, gameObj2, self.canvas)
-                            CollisionEvent(self, gameObj2, gameObj1, self.canvas)
+                        if game_obj1.allowCollision is True and game_obj2.allowCollision is True:
+                            if game_obj1.distance(game_obj2) < (game_obj1.baseRadius + game_obj2.baseRadius):
+                                CollisionEvent(self, game_obj1, game_obj2, self.canvas)
+                                CollisionEvent(self, game_obj2, game_obj1, self.canvas)
         # UpdateEvent(self, 0, self.canvas)
 
     # noinspection PyTypeChecker,PyShadowingNames
     def main(self):
+        load_desc_font = Font("Helvetica", 13)
+        load_title_font = Font("Helvetica", 46, "bold")
 
-        loadDescFont = Font("Helvetica", 13)
-        loadTitleFont = Font("Helvetica", 46, "bold")
         t0 = self.canvas.create_rectangle(0, 0, Registry.gameData["WindowWidth"], Registry.gameData["WindowHeight"],
                                           fill="#3f3f3f",
                                           outline="#3f3f3f")
         t1 = self.canvas.create_text(Registry.gameData["MiddleX"], Registry.gameData["MiddleY"] - 30,
                                      text="Loading...",
-                                     font=loadTitleFont.get_tuple(), fill="#afafaf")
+                                     font=load_title_font.get_tuple(), fill="#afafaf")
         t2 = self.canvas.create_text(Registry.gameData["MiddleX"], Registry.gameData["MiddleY"] + 20,
                                      text="Loading Mods",
-                                     font=loadDescFont.get_tuple(), fill="#afafaf")
+                                     font=load_desc_font.get_tuple(), fill="#afafaf")
         self.canvas.update()
 
         Logging.info("GameScene", "Initialize game environment")
 
         # self.gameMap.player.create(7.5, 7.5)
 
-        shipPosition = Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Position"]
-
-        # self.gameMap.player.teleport(shipPosition[0], shipPosition[1])
+        # # TODO: Remove when unneeded, i.e. when using gamemaps instead of internal in GameMain.
+        # ship_position = Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Position"]
 
         self.canvas.itemconfig(t1, text="Creating Stats objects")
         self.canvas.itemconfig(t2, text="")
@@ -948,8 +951,6 @@ class Game(CanvasScene):
         self.canvas.itemconfig(t2, text="Player Motion")
         # self.gameMap.player.activate_events()
 
-        Logging.info("GameScene", "Key-bindings binded to 'move_ship'")
-
         stats = Registry.saveData
 
         self.canvas.itemconfig(t1, text="Reapply effects to player")
@@ -960,11 +961,11 @@ class Game(CanvasScene):
         #     appliedEffect: AppliedEffect = AppliedEffect(effect, self, effectdata["duration"], effectdata["strength"])
         #     self.gameMap.player.appliedEffects.append(appliedEffect)
         #     self.gameMap.player.appliedEffectTypes.append(effect)
-        if Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["score"] < 0:
+        if Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["score"] < 0:
             log.error("Game.main", "The 'Score' variable under zero.")
-            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["score"] = 0
-        if Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["score"] > Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["high_score"]:
-            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["high_score"] = Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["score"]
+            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["score"] = 0
+        if Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["score"] > Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["highScore"]:
+            Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["highScore"] = Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["score"]
 
         Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["keyactive"] = True
 
@@ -989,8 +990,11 @@ class Game(CanvasScene):
         KeyReleaseEvent.bind(self.on_keyrelease)
         # KeyPressEvent.bind(self.on_keypress)
 
+        Logging.info("GameScene", "Save loaded successfully, starting mainloop.")
+
         t1 = time()
 
+        # Do you know the comment below is there about more than 4 years? Already on the begginings of the code.
         # MAIN GAME LOOP
         while self.gameMap.player.health > 0:
             delta_time = time() - t1
@@ -1029,7 +1033,7 @@ class Game(CanvasScene):
             font=('Helvetica', 30))
         g3 = self.canvas.create_text(
             Registry.gameData["MiddleX"], Registry.gameData["MiddleY"] + 90,
-            text='Level: ' + str(Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["level"]), fill='white', font=('Helvetica', 30))
+            text='Level: ' + str(Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["level"]), fill='white', font=('Helvetica', 30))
         log.info("Game.main", "Game Over!")
         self.root.update()
         for i in range(40):

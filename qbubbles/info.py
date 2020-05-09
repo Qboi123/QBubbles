@@ -198,7 +198,7 @@ def show_info(canvas: Canvas, texts: Dict[str, int], stats):
     :return:
     """
     try:
-        show_score(canvas, texts, Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["score"])
+        show_score(canvas, texts, Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["score"])
         show_level(canvas, texts, stats["level"])
         show_speed(canvas, texts, stats["shipspeed"])
         show_lives(canvas, texts, stats["lives"])

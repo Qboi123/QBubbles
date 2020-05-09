@@ -282,7 +282,7 @@ def refresh(stats, config, bubble, bub, canvas, backgrounds, texts, modes, panel
     from threading import Thread
     from qbubbles.bubble import create_bubble
     from qbubbles.info import show_info
-    if Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["score"] / config["Game"]["level-score"] > stats["level"]:
+    if Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["score"] / config["Game"]["level-score"] > stats["level"]:
         if randint(0, 125) == 0:
             if not bubble["key-active"]:
                 Thread(None, lambda: create_bubble(stats, config, bub, canvas, bubble, i=-1)).start()
@@ -337,10 +337,10 @@ def refresh_state(stats, bubbles, canvas, backgrounds, panels):
             exit(0)
         except TclError:
             exit(0)
-    if Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["score"] > Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["high-score"]:
-        Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["high-score"] = Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["score"]
-    Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["score"] = int(Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["score"])
-    Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["high-score"] = int(Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["high-score"])
+    if Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["score"] > Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["highScore"]:
+        Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["highScore"] = Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["score"]
+    Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["score"] = int(Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["score"])
+    Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["highScore"] = int(Registry.saveData["Sprites"]["qbubbles:player"]["objects"][0]["Attributes"]["highScore"])
     if stats["confusion"] and not stats["secure"]:
         shuffling(bubbles)
 

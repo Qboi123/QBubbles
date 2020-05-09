@@ -168,13 +168,13 @@ class SavedataReadedEvent(Event):
             handler(data)
 
     @classmethod
-    def bind(cls, func: _t.Callable[['SavedataReadedEvent'], _t.Any]):
+    def bind(cls, func: _t.Callable[['_t.Any'], _t.Any]):
         cls._handlers.append(func)
         # print(func)
         return func
 
     @classmethod
-    def unbind(cls, func: _t.Callable[['SavedataReadedEvent'], _t.Any]):
+    def unbind(cls, func: _t.Callable[['_t.Any'], _t.Any]):
         cls._handlers.remove(func)
         # print(f"Unbind: {func.__name__}")
         return func
@@ -605,13 +605,13 @@ class EffectApplyEvent(Event):
         super(EffectApplyEvent, self).__init__(scene)
 
     @classmethod
-    def bind(cls, func: _t.Callable[['PauseEvent'], _t.Any]):
+    def bind(cls, func: _t.Callable[['EffectApplyEvent'], _t.Any]):
         cls._handlers.append(func)
         # print(func)
         return func
 
     @classmethod
-    def unbind(cls, func: _t.Callable[['PauseEvent'], _t.Any]):
+    def unbind(cls, func: _t.Callable[['EffectApplyEvent'], _t.Any]):
         cls._handlers.remove(func)
         # print(f"Unbind: {func.__name__}")
         return func
