@@ -102,7 +102,7 @@ def createbubble_image(size, inner=None, *colors):
     else:
         for index in range(0, len(colors)):
 
-            if len(colors) - 1 > index > 0:  # .OOO.
+            if index == 0:  # .OOO.
                 draw_ellipse(im, (0 + i, 0 + i, size[0] - i, size[0] - i), outline=colors[index], width=w + ex_w,
                              antialias=4)
             elif index == len(colors) - 1:  # ....O
@@ -384,14 +384,14 @@ def control(input_modes: dict, config: dict, root: Tk, canvas: Canvas, stats: di
         temp["frame"] = temp["sw"].scrollwindow
 
         class_names = ("Normal", "Double", "Kill", "Triple", "SpeedUp", "SpeedDown", "Up", "Ultimate", "DoubleState",
-                       "Protect", "SlowMotion", "TimeBreak", "Confusion", "HyperMode", "Teleporter",
+                       "Protect", "SlowMotion", "TimeBreak", "Confusion", "HyperMode", "energy_bubble",
                        "Coin", "NoTouch", "Paralyse", "Diamond", "StoneBub", "Present", "SpecialKey", "LevelKey")
 
         id_names = (
             "bubble.normal", "bubble.double", "bubble.kill", "bubble.triple", "bubble.speedup", "bubble.speeddown",
             "bubble.up", "bubble.state.ultimate", "bubble.state.double", "bubble.state.protect",
             "bubble.state.slowmotion",
-            "bubble.state.timebreak", "bubble.state.confusion", "bubble.state.hypermode", "bubble.teleporter",
+            "bubble.state.timebreak", "bubble.state.confusion", "bubble.state.hypermode", "bubble.energy_bubble",
             "bubble.coin", "bubble.state.notouch", "bubble.state.paralyse", "bubble.diamond", "bubble.stonebubble",
             "bubble.present", "bubble.state.specialkey", "bubble.levelkey"
         )

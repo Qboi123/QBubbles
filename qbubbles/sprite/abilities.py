@@ -1,7 +1,7 @@
 from typing import Optional
 
 from qbubbles.advUtils.time import Time, TimeSpan
-from qbubbles.events import KeyPressEvent, KeyReleaseEvent, CollisionEvent, SpriteDamageEvent
+from qbubbles.events import KeyPressEvent, KeyReleaseEvent, SpriteDamageEvent
 from qbubbles.gameIO import Logging
 
 
@@ -45,8 +45,6 @@ class GhostAbility(Ability):
     def __init__(self, sprite):
         super(GhostAbility, self).__init__(sprite)
 
-        CollisionEvent.bind(self.on_collision)
-
         self.set_uname("qbubbles:ghost_ability")
 
     def activate(self):
@@ -65,6 +63,7 @@ class GhostAbility(Ability):
     #         event.eventObject.skip_collision(self._sprite)
 
 
+# noinspection PyUnusedLocal
 class TeleportAbility(Ability):
     def __init__(self, sprite):
         super(TeleportAbility, self).__init__(sprite)
@@ -102,25 +101,25 @@ class TeleportAbility(Ability):
         if evt.keySym.lower() != "shift_l":
             print(f"[Test] TeleportAbility<KeyReleaseEvent.keySym.lower()>: {evt.keySym.lower()}")
             return
-        timeSpan = TimeSpan(self.loadedTime, Time.system_time())
-        timeLength = timeSpan.get_timelength()
-        if 0 < timeLength.get_seconds() <= 0.25:
+        timespan = TimeSpan(self.loadedTime, Time.system_time())
+        duration = timespan.get_timelength()
+        if 0 < duration.get_seconds() <= 0.25:
             pixels = 1
-        elif 0.25 < timeLength.get_seconds() <= 0.5:
+        elif 0.25 < duration.get_seconds() <= 0.5:
             pixels = 2
-        elif 0.5 < timeLength.get_seconds() <= 1:
+        elif 0.5 < duration.get_seconds() <= 1:
             pixels = 4
-        elif 1 < timeLength.get_seconds() <= 3:
+        elif 1 < duration.get_seconds() <= 3:
             pixels = 8
-        elif 3 < timeLength.get_seconds() <= 5:
+        elif 3 < duration.get_seconds() <= 5:
             pixels = 16
-        elif 5 < timeLength.get_seconds() <= 7.5:
+        elif 5 < duration.get_seconds() <= 7.5:
             pixels = 32
-        elif 7.5 < timeLength.get_seconds() <= 10:
+        elif 7.5 < duration.get_seconds() <= 10:
             pixels = 64
-        elif 10 < timeLength.get_seconds() <= 60:
+        elif 10 < duration.get_seconds() <= 60:
             pixels = 128
-        elif 60 < timeLength.get_seconds():
+        elif 60 < duration.get_seconds():
             pixels = 256
 
 

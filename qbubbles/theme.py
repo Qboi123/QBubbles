@@ -1,3 +1,7 @@
+from tkinter.ttk import Style
+
+_print = print
+
 import time
 
 import yaml
@@ -21,8 +25,48 @@ class Theme(object):
         self.layout = layout
         self.options = options
 
+        print = _print
+
         self.fix_styles()
         self.fix_layout()
+        for key, value in self.style.items():
+            print(f"""
+s.theme_settings(
+    "QUI", {{
+        {repr(key)}: {repr(value)}
+    }}
+)"""[1:])
+
+        for key, value in self.config.items():
+            print(f"""
+s.configure(
+    {repr(key)}, {', '.join([f"{k}={repr(v)}" for k, v in value.items()])}
+)"""[1:])
+
+        for key, value in self.layout.items():
+            print(f"""
+s.layout(
+    {repr(key)}, {repr(value)}
+)"""[1:])
+
+        for key, value in self.options.items():
+            if "*" in key:
+                raise ValueError("Option key must not contain '*'")
+            type_old = key.replace(".", "*")
+            type_ = "*" + type_old + "*"
+            # print("LOOP A:", type_, type_old, key, value)
+            for key2, value2 in value.items():
+                print(f"widget.option_add({repr(type_ + key2)}, {repr(value2)})")
+                # master.option_add(type_ + key2, value2)
+
+        s = Style()
+
+        print(f"""
+s.layout(
+    'TCombobox', {repr(s.layout('TCombobox'))}
+)"""[1:])
+
+        exit(0)
         # print(self.style)
         # print(self.config)
         # print(self.layout)

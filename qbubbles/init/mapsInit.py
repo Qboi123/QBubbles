@@ -1,8 +1,9 @@
+from qbubbles.maps import DimensionalMap, ClassicMap
+
 GAMEMAPS = []
 
 
 def init_gamemaps():
-    from qbubbles.maps import ClassicMap
-
     GAMEMAPS.append(ClassicMap())
+    GAMEMAPS.append(DimensionalMap())
     return GAMEMAPS

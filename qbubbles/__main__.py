@@ -194,9 +194,9 @@ class Main(Toplevel):
 
         # os.chdir(game_dir)
 
-        Registry.register_scene("LoadScreen", Load(Registry.get_window("default")))
+        Registry.register_scene("qbubbles:loadingscreen", Load(Registry.get_window("default")))
 
-        Load.scenemanager.change_scene("LoadScreen")
+        Load.scenemanager.change_scene("qbubbles:loadingscreen")
 
     def pre_run(self):
         """

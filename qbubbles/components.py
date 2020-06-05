@@ -902,7 +902,7 @@ class CheatEngine:
         :param params:
         """
         from qbubbles.bubble import create_bubble
-        act = ["Double", "Kill", "Triple", "Normal", "SpeedDown", "SpeedUp", "Up", "Ultimate", "Teleporter",
+        act = ["Double", "Kill", "Triple", "Normal", "SpeedDown", "SpeedUp", "Up", "Ultimate", "energy_bubble",
                "SlowMotion", "HyperMode", "Protect", "ShotSpdStat", "TimeBreak", "DoubleState", "Confusion", "Paralyse",
                "StoneBub", "NoTouch", "Coin", "Diamond"]
         if 2 >= len(params) >= 1:
@@ -941,7 +941,7 @@ class CheatEngine:
                     i = 985
                 elif p == "Paralyse":
                     i = 1085
-                elif p == "Teleporter":
+                elif p == "energy_bubble":
                     i = 1120
                 elif p == "Diamond":
                     i = 1121
@@ -995,7 +995,7 @@ class CheatEngine:
                     i = 985
                 elif p == "Paralyse":
                     i = 1085
-                elif p == "Teleporter":
+                elif p == "energy_bubble":
                     i = 1120
                 elif p == "Diamond":
                     i = 1121

@@ -77,7 +77,7 @@ class StoreItemCompiler(object):
                 self.mode = "w"
 
 
-if __name__ == '__main__':\
+if __name__ == '__main__':
     StoreItemCompiler(json="""[
   {"coins": 5, "diamonds": 4, "name": "Level-up", "icon": "assets/Key.png"},
   {"coins": 0, "diamonds": 5, "name": "Teleport", "icon": ""},

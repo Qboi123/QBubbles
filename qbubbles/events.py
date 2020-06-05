@@ -52,6 +52,27 @@ class ExperienceEvent(Event):
         return func
 
 
+class LanguageChangeEvent(Event):
+    _handlers = list()
+
+    def __init__(self, scene, langid):
+        self.langid = langid
+
+        super(LanguageChangeEvent, self).__init__(scene)
+
+    @classmethod
+    def bind(cls, func: _t.Callable[['LanguageChangeEvent'], _t.Any]):
+        cls._handlers.append(func)
+        # print(func)
+        return func
+
+    @classmethod
+    def unbind(cls, func: _t.Callable[['LanguageChangeEvent'], _t.Any]):
+        cls._handlers.remove(func)
+        # print(f"Unbind: {func.__name__}")
+        return func
+
+
 # noinspection PyUnusedLocal
 class PreInitializeEvent(Event):
     _handlers = list()
@@ -462,6 +483,52 @@ class CleanUpEvent(Event):
 
     @classmethod
     def unbind(cls, func: _t.Callable[['CleanUpEvent'], _t.Any]):
+        cls._handlers.remove(func)
+        # print(f"Unbind: {func.__name__}")
+        return func
+
+
+class RegionEnterEvent(Event):
+    _handlers = list()
+
+    def __init__(self, scene, region: _t.Tuple[int, int]):
+        if scene.__class__.__name__ != "Game":
+            raise RuntimeError("Scene must be specific a Game instance")
+        self.canvas = scene.canvas
+        self.region = region
+        super(RegionEnterEvent, self).__init__(scene)
+
+    @classmethod
+    def bind(cls, func: _t.Callable[['RegionEnterEvent'], _t.Any]):
+        cls._handlers.append(func)
+        # print(func)
+        return func
+
+    @classmethod
+    def unbind(cls, func: _t.Callable[['RegionEnterEvent'], _t.Any]):
+        cls._handlers.remove(func)
+        # print(f"Unbind: {func.__name__}")
+        return func
+
+
+class RegionLeaveEvent(Event):
+    _handlers = list()
+
+    def __init__(self, scene, region: _t.Tuple[int, int]):
+        if scene.__class__.__name__ != "Game":
+            raise RuntimeError("Scene must be specific a Game instance")
+        self.canvas = scene.canvas
+        self.region = region
+        super(RegionLeaveEvent, self).__init__(scene)
+
+    @classmethod
+    def bind(cls, func: _t.Callable[['RegionLeaveEvent'], _t.Any]):
+        cls._handlers.append(func)
+        # print(func)
+        return func
+
+    @classmethod
+    def unbind(cls, func: _t.Callable[['RegionLeaveEvent'], _t.Any]):
         cls._handlers.remove(func)
         # print(f"Unbind: {func.__name__}")
         return func

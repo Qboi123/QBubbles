@@ -4,6 +4,7 @@ import typing as _t
 import tkinter
 
 import overload
+from PIL import ImageTk
 
 from deprecated import deprecated
 
@@ -210,68 +211,75 @@ class Sprite:
     requires = ("sprites", "config", "canvas", "stats", "log", "ship", "bubbles")
 
     def __init__(self, **kw):
-        name = "EmptySprite"
+        name: str = "EmptySprite"
 
-        self._kw = kw
+        self._kw: _t.Dict = kw
 
         self.abilities: typing.List[_abilities.Ability] = []
 
         # Axis
-        self.axis = (_base.HORIZONTAL, _base.VERTICAL)
+        self.axis: _t.Union[_t.Tuple[str, str], _t.Tuple[str], str] = (_base.HORIZONTAL, _base.VERTICAL)
 
         # Has- variables
-        self.hasSkin = True
-        self.hasMovetag = True
+        self.hasSkin: bool = True
+        self.hasMovetag: bool = True
 
         # Type
-        self.type = _base.TYPE_NEUTRAL
-        self.shoots = _base.FALSE
-        self.form = _base.FORM_CIRCLE
+        self.type: str = _base.TYPE_NEUTRAL
+        self.shoots: str = _base.FALSE
+        self.form: str = _base.FORM_CIRCLE
 
         # Info
-        self.baseRadius = int()
-        self.height = int()
-        self.width = int()
+        self.baseRadius: _t.Union[int, float] = int()
+        self.height: _t.Union[int, float] = int()
+        self.width: _t.Union[int, float] = int()
 
         # Direction movement
-        self.returnBorder = True
-        self.direction = _base.LEFT
+        self.returnBorder: bool = True
+        self.direction: str = _base.LEFT
 
         # HP System
-        self.health = 1
-        self.maxHealth = 1
-        self.regenValue = 1
-        self.attackValue = 0
-        self.defenceValue = 1
-        self.regenMultiplier = 0
-        self.attackMultiplier = 1
-        self.defenceMultiplier = 1
+        self.health: _t.Union[int, float] = 1
+        self.maxHealth: _t.Union[int, float] = 1
+        self.regenValue: _t.Union[int, float] = 1
+        self.attackValue: _t.Union[int, float] = 0
+        self.defenceValue: _t.Union[int, float] = 1
+        self.regenMultiplier: _t.Union[int, float] = 0
+        self.attackMultiplier: _t.Union[int, float] = 1
+        self.defenseMultiplier: _t.Union[int, float] = 1
 
         # Switches
-        self.allowCollision = True
+        self.allowCollision: bool = True
 
         # x and y, move and speed variables
-        self.xMove = -3
-        self.xSpeed = 3
-        self.yMove = 0
-        self.ySpeed = 0
+        self.xMove: _t.Union[int, float] = -3
+        self.xSpeed: _t.Union[int, float] = 3
+        self.yMove: _t.Union[int, float] = 0
+        self.ySpeed: _t.Union[int, float] = 0
 
         # self.collisionWith = (SHIP, ANY_BUBBLE)
         self.collisionWith: typing.Optional[typing.List] = None
 
-        self.lifeCost = 1
+        self.lifeCost: _t.Union[int, float] = 1
 
-        self.id = int()
+        self.id: int
 
-        self._spriteName: str = None
+        self._spriteName: _t.Optional[str] = None
 
-        self.coordsLen = 2
+        self.coordsLen: int = 2
 
-        self._spriteData = {}
-        self._objectData = {"Position": (None, None)}
-        self.dead = False
+        self._spriteData: _t.Dict = {}
+        self._objectData: _t.Dict = {"Position": (None, None)}
+        self.dead: bool = False
 
     def reload(self, odata: _t.Union[_t.Dict, SpriteData]):
+        """
+        Sprite Reloader, called when the save was reloaded, so not the first time loading it.
+
+        :param odata:
+        :return:
+        """
+
         pass
 
     def __repr__(self):
@@ -279,52 +287,136 @@ class Sprite:
         return f"Sprite({repr(self.get_sname())}, data="+a+")"
 
     def delete(self) -> typing.NoReturn:
-        canvas: tkinter.Canvas = _reg.Registry.get_scene("Game").canvas
+        """
+        Delete Sprite object from the GameMap.
+
+        :return:
+        """
+
+        canvas: tkinter.Canvas = _reg.Registry.get_scene("qbubbles:game").canvas
         canvas.delete(self.id)
 
-    def get_spritedata(self) -> dict:
+    def get_spritedata(self) -> _t.Dict:
+        """
+        Get static sprite data.
+
+        :return:
+        """
+
         return self._spriteData
 
-    def create(self, x, y):
-        _reg.Registry.get_scene("Game").gameObjects.append(self)
+    def create(self, x: _t.Union[int, float], y: _t.Union[int, float]):
+        """
+        Create the sprite, and draw it on the canvas.
 
-    def get_sname(self):
+        :param x: The x-coordinate of the sprite to create it on.
+        :param y: The y-coordinate of the sprite to create it on.
+        :returns: Most probably the sprite ID, not always.
+        """
+
+        _reg.Registry.get_scene("qbubbles:game").gameMap.gameObjects.append(self)
+
+    def get_sname(self) -> str:
+        """
+        Get the uname of the sprite object (not the sprite type).
+
+        :return:
+        """
+
         return self._spriteName
 
     @staticmethod
-    def _c_create_image(x, y, image, anchor="nw"):
-        return _reg.Registry.get_scene("Game").canvas.create_image(x, y, image=image, anchor=anchor)
+    def _c_create_image(x: _t.Union[int, float], y: _t.Union[int, float],
+                        image: _t.Union[tkinter.PhotoImage, ImageTk.PhotoImage], anchor="nw") -> int:
+        """
+        Create an image, and draw it on the canvas.
 
-    def move(self, x, y):
-        _reg.Registry.get_scene("Game").canvas.move(self.id, x, y)
+        :param x: x-coordinate of the canvas item.
+        :param y: y-coordinate of the canvas item.
+        :param image: the image to draw on the canvas.
+        :param anchor: the anchor of the canvas item.
+        :returns: The ID of the created canvas item.
+        :raises TclError: If Tcl / Tk has failed to create the image on the canvas.
+        """
+
+        return _reg.Registry.get_scene("qbubbles:game").canvas.create_image(x, y, image=image, anchor=anchor)
+
+    def move(self, dx: _t.Union[int, float], dy: _t.Union[int, float]):
+        """
+        Move relative to the current sprite position.
+
+        :param dx: The delta x-position relative to the current sprite position.
+        :param dy: The delta y-position relative to the current sprite position.
+        :return:
+        """
+
+        _reg.Registry.get_scene("qbubbles:game").canvas.move(self.id, dx, dy)
         self._objectData["Position"] = self.get_coords()
+        return self._objectData["Position"]
 
-    def teleport(self, x, y):
-        _reg.Registry.get_scene("Game").canvas.coords(self.id, x, y)
+    def teleport(self, x: _t.Union[int, float], y: _t.Union[int, float]):
+        """
+        Move the sprite directly to the specified position.
+
+        :param x: The x-coordinate to teleport to.
+        :param y: The y-coordinate to teleport to.
+        :returns: The new position of the sprite.
+        """
+
+        _reg.Registry.get_scene("qbubbles:game").canvas.coords(self.id, x, y)
         self._objectData["Position"] = self.get_coords()
+        return self._objectData["Position"]
 
-    def get_coords(self):
-        return _reg.Registry.get_scene("Game").canvas.coords(self.id)
+    def get_coords(self) -> _t.Union[_t.Tuple[float, float], _t.Tuple[float, float, float, float]]:
+        """
+        Get the coordinates of the sprite.
 
-    def attack(self, other: object):
+        :return:
+        """
+
+        return _reg.Registry.get_scene("qbubbles:game").canvas.coords(self.id)
+
+    def attack(self, other: 'Sprite') -> _t.NoReturn:
+        """
+        Attack the other sprite.
+
+        :param other:
+        :return:
+        """
+
         if not issubclass(type(other), Sprite):
             raise TypeError("argument 'other' must be a Sprite-object")
         other: Sprite
         # print(f"{self.__class__.__name__} is attacking {other.__class__.__name__}")
-        if other.defenceMultiplier != 0:
-            other.damage(self.attackMultiplier / other.defenceMultiplier)
+        if other.defenseMultiplier != 0:
+            other.damage(self.attackMultiplier / other.defenseMultiplier)
         else:
             other.instant_death()
 
-    def damage(self, value: float, src = None):
-        scene = _reg.Registry.get_scene("Game")
+    def damage(self, value: float, src=None) -> _t.NoReturn:
+        """
+        Damage the sprite, from the given source. With ``value`` damage.
+
+        :param value: The damage value.
+        :param src: The source of damage.
+        :return:
+        """
+
+        scene = _reg.Registry.get_scene("qbubbles:game")
         if not _evts.SpriteDamageEvent(scene, self).cancel:
             self.health -= value / self.defenceValue
             if self.health <= 0:
                 self.dead = True
 
-    def distance(self, to):
-        canvas = _reg.Registry.get_scene("Game").canvas
+    def distance(self, to: 'Sprite') -> float:
+        """
+        Distance to the other sprite.
+
+        :param to: The other sprite to calculate the distance to.
+        :returns: The distance to the other sprite
+        """
+
+        canvas = _reg.Registry.get_scene("qbubbles:game").canvas
         try:
             # try:
             x1, y1 = self.get_coords()
@@ -343,32 +435,38 @@ class Sprite:
         except UnboundLocalError:
             return math.inf
 
-    def instant_death(self):
+    def instant_death(self) -> _t.NoReturn:
+        """
+        Instant death / destroy of the sprite.
+
+        :return:
+        """
+
         self.health = 0
         self.dead = True
 
-    def on_collision(self, evt: _evts.CollisionEvent):
+    def on_collision(self, evt: _evts.CollisionEvent) -> _t.Optional[bool]:
         pass
 
-    def on_keypress(self, evt: _evts.KeyPressEvent):
+    def on_keypress(self, evt: _evts.KeyPressEvent) -> _t.Optional[bool]:
         pass
 
-    def on_keyrelease(self, evt: _evts.KeyReleaseEvent):
+    def on_keyrelease(self, evt: _evts.KeyReleaseEvent) -> _t.Optional[bool]:
         pass
 
-    def on_xboxcontrol(self, evt: _evts.XInputEvent):
+    def on_xboxcontrol(self, evt: _evts.XInputEvent) -> _t.Optional[bool]:
         pass
 
-    def on_mouseenter(self, evt: _evts.MouseEnterEvent):
+    def on_mouseenter(self, evt: _evts.MouseEnterEvent) -> _t.Optional[bool]:
         pass
 
-    def on_mouseleave(self, evt: _evts.MouseLeaveEvent):
+    def on_mouseleave(self, evt: _evts.MouseLeaveEvent) -> _t.Optional[bool]:
         pass
 
-    def on_update(self, evt: _evts.UpdateEvent):
+    def on_update(self, evt: _evts.UpdateEvent) -> _t.Optional[bool]:
         pass
 
-    def get_objectdata(self):
+    def get_objectdata(self) -> _t.Dict[str, _t.Any]:
         return dict(self._objectData).copy()
 
 
@@ -382,6 +480,7 @@ class Player(Sprite):
         super(Player, self).__init__()
 
         # Effects, and applied effects.
+        self.abilityEnergy = 0
         self.appliedEffects: typing.List[_effects.AppliedEffect] = []
         self.appliedEffectTypes: typing.List[typing.Type[_effects.AppliedEffect]] = []
 
@@ -397,6 +496,7 @@ class Player(Sprite):
                         #  **dict(((key, value) for key, value in _reg.Registry.get_abilities()))
                     },
                     "Attributes": {
+                        "abilityEnergy": 0,
                         "highScore": 10,
                         "maxHealth": 10,
                         "health": 10,
@@ -513,8 +613,15 @@ class Player(Sprite):
             # Start the effect using saved effect data. Using the object-data (odata) given from the arguments.
             if effectdata["duration"] > 0.0:
                 self.start_effect(
-                    effect, _reg.Registry.get_scene("Game"), effectdata["duration"], effectdata["strength"],
+                    effect, _reg.Registry.get_scene("qbubbles:game"), effectdata["duration"], effectdata["strength"],
                     **dict(effectdata["extradata"]))
+
+        # for abilitydata in odata["Ability"]:
+        #     ability: _abilities.Ability = _reg.Registry.get_ability(abilitydata["id"])
+        #
+        #     # Append ability data to the list of abilities.
+        #     if abilitydata["duration"] > 0.0:
+        #         self.abilities.append(ability)
 
         attributes = odata["Attributes"]
         self.coins = attributes["coins"]
@@ -524,6 +631,7 @@ class Player(Sprite):
         self.health = attributes["health"]
         self.maxHealth = attributes["maxHealth"]
         self.highScore = attributes["highScore"]
+        self.abilityEnergy = attributes["abilityEnergy"]
 
         modifiers = odata["Modifiers"]
         self.scoreMultiplier = modifiers["scoreMultiplier"]
@@ -540,46 +648,112 @@ class Player(Sprite):
         # effectdata[]
         # self.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation.rotation
 
-    def add_score(self, value):
+    def add_score(self, value: int) -> _t.NoReturn:
+        """
+        Adds score to the player.
+
+        :param value: The amount of score to add.
+        :return:
+        """
+
         self.score += value * self.scoreMultiplier
 
-    def remove_score(self, value):
+    def remove_score(self, value: int) -> _t.NoReturn:
+        """
+        Removes score from the player.
+
+        :param value: The amount of score to remove.
+        :return:
+        """
+
         result = self.score - value * self.scoreMultiplier
         if result < 0:
             result = 0
         self.score = result
 
-    def set_score(self, value):
+    def set_score(self, value: int) -> _t.NoReturn:
+        """
+        Sets the score of the player.
+
+        :param value: The score of the player to set.
+        :return:
+        """
+
         if value < 0:
             raise ValueError("Score value must be greater than or equal to zero")
 
         self.score = value
 
-    def get_score(self):
+    def get_score(self) -> int:
+        """
+        Gets the score of the player.
+
+        :returns: The amount of score of the player.
+        """
+
         return self.score
 
-    def add_health(self, value):
+    def add_health(self, value) -> _t.NoReturn:
+        """
+        Adds health to the player, same as Player.regen()
+
+        :param value: The amount of health to regen.
+        :return:
+        """
+
         self.regen(value)
 
-    def set_health(self, value):
+    def set_health(self, value) -> _t.NoReturn:
+        """
+        Sets the health of the player
+
+        :param value: The health of the player to set.
+        :return:
+        """
+
         self.health = value
         self.health_check()
 
-    def get_health(self):
+    def get_health(self) -> _t.Union[int, float]:
+        """
+        Gets the health of the player
+
+        :returns: The health of the player
+        """
+
         return self.health
 
-    def health_check(self):
+    def health_check(self) -> _t.NoReturn:
+        """
+        Checks if the player is dead (has less than or equal to 0 health).
+
+        :return:
+        """
+
         if self.health < 0:
             self.dead = True
 
     @overload.overload
-    def regen(self, value=None):
+    def regen(self, value=None) -> _t.NoReturn:
+        """
+        Regenerate health
+
+        :param value: The amount of health to regenerate.
+        :return:
+        """
+
         if value is None:
             return self.regen()
         self.health += value * self.regenMultiplier
 
     @regen.add
-    def regen(self):
+    def regen(self) -> _t.NoReturn:
+        """
+        Regenerate health
+
+        :return:
+        """
+
         self.health += self.regenValue * self.regenMultiplier
 
     # def damage(self, value: float):
@@ -634,6 +808,13 @@ class Player(Sprite):
         _evts.SavedataReadedEvent.unbind(self.on_savedata_readed)
 
     def on_pause(self, evt: _evts.PauseEvent):
+        """
+        Pause event handler.
+
+        :param evt:
+        :return:
+        """
+
         self._pause = evt.pause
 
     def on_collision(self, evt: _evts.CollisionEvent):
@@ -650,7 +831,8 @@ class Player(Sprite):
             evt.eventObject.attack(evt.collidedObj)
             if isinstance(evt.collidedObj, Player):
                 if evt.collidedObj == self:
-                    evt.collidedObj.score += int(evt.eventObject.baseRadius * (evt.eventObject.baseSpeed / 8) / 8) * evt.eventObject.scoreMultiplier
+                    evt.collidedObj.score += int(evt.eventObject.baseRadius * (evt.eventObject.baseSpeed / 8) / 8) * \
+                                             evt.eventObject.scoreMultiplier
 
         # Todo: Remove when seems to be unnecessary.
         elif evt.eventObject.get_sname() != "qbubbles:bubble":
@@ -658,7 +840,8 @@ class Player(Sprite):
             evt.collidedObj.attack(evt.eventObject)  # evt.collidedObj.attackMultiplier / self.defenseMultiplier)
             evt.eventObject.attack(evt.collidedObj)
             if evt.eventObject.get_sname() == "qbubbles:player":
-                evt.eventObject.score += int(evt.collidedObj.baseRadius * (evt.collidedObj.baseSpeed / 8) / 8) * evt.collidedObj.scoreMultiplier
+                evt.eventObject.score += int(evt.collidedObj.baseRadius * (evt.collidedObj.baseSpeed / 8) / 8) * \
+                                         evt.collidedObj.scoreMultiplier
 
     def add_experience(self, experience):
         """
@@ -686,7 +869,7 @@ class Player(Sprite):
             time_length: float = effect["timeRemaining"]
             if time_length > 0.0:
                 strength: float = effect["strength"]
-                self.start_effect(effect_class, _reg.Registry.get_scene("Game"), time_length, strength)
+                self.start_effect(effect_class, _reg.Registry.get_scene("qbubbles:game"), time_length, strength)
 
     def remove_effect(self, appliedeffect: _effects.AppliedEffect):
         """
@@ -701,7 +884,8 @@ class Player(Sprite):
         del self.appliedEffects[index]
         return index
 
-    def start_effect(self, effect_class: _effects.BaseEffect, scene, duration: float, strength: _t.Union[float, int], **extradata) -> _effects.AppliedEffect:
+    def start_effect(self, effect_class: _effects.BaseEffect, scene, duration: float, strength: _t.Union[float, int],
+                     **extradata) -> _effects.AppliedEffect:
         """
         Starts an effect, it converts the BaseEffect() subclass into an AppliedEffect() instance. And starts the effect.
 
@@ -713,6 +897,9 @@ class Player(Sprite):
         :raises AssertionError: If the effect-class is a type.
         :returns: The applied-effect
         """
+
+        _gameIO.Logging.debug(
+            "Player", f"Starting effect: {effect_class.get_uname()} for {duration} seconds, with strength {strength}")
 
         assert not isinstance(effect_class, type)
 
@@ -733,7 +920,9 @@ class Player(Sprite):
         odata["Rotation"] = self.rotation
 
         attributes = dict()
+        attributes["abilityEnergy"] = self.abilityEnergy
         attributes["highScore"] = self.highScore
+        attributes["maxHealth"] = self.maxHealth
         attributes["health"] = self.health
         attributes["speed"] = self.speed
         attributes["score"] = self.score
@@ -759,16 +948,16 @@ class Player(Sprite):
         odata["Abilities"] = [ability.get_data() for ability in self.abilities]
         return odata
 
-    def move(self, x: _t.Union[int, float] = 0, y: _t.Union[int, float] = 0):
+    def move(self, dx: _t.Union[int, float] = 0, dy: _t.Union[int, float] = 0):
         """
         Moves the player relative to the current position.
 
-        :param x:
-        :param y:
+        :param dx:
+        :param dy:
         :return:
         """
 
-        _reg.Registry.get_scene("Game").canvas.move(self.id, x, y)
+        _reg.Registry.get_scene("qbubbles:game").canvas.move(self.id, dx, dy)
 
     @deprecated("Use move() instead")
     def move_joy(self, x=0, y=0):
@@ -780,7 +969,7 @@ class Player(Sprite):
         :return:
         """
 
-        _reg.Registry.get_scene("Game").canvas.move(self.id, x, y)
+        _reg.Registry.get_scene("qbubbles:game").canvas.move(self.id, x, y)
 
     def on_effect_stop(self, appliedeffect: _effects.AppliedEffect):
         self.remove_effect(appliedeffect)
@@ -825,7 +1014,7 @@ class Player(Sprite):
     def create(self, x, y):
         image = _reg.Registry.get_texture("sprite", "player", rotation=0)
         self.id = self._c_create_image(x, y, image, anchor="center")
-        # self.id = Registry.get_scene("Game").canvas.create_image(x, y, image=Registry.get_texture("sprite", "player",
+        # self.id = Registry.get_scene("qbubbles:game").canvas.create_image(x, y, image=Registry.get_texture("sprite", "player",
         #                                                                                           rotation=0))
         self.baseSpeed = 80
         self.speed = 80
@@ -839,7 +1028,7 @@ class Player(Sprite):
         """
         image = _reg.Registry.get_texture(
             "sprite", "player", rotation=int(self.rotation - (self.rotation % 1)))
-        c = _reg.Registry.get_scene("Game").canvas
+        c = _reg.Registry.get_scene("qbubbles:game").canvas
         c.itemconfig(self.id, image=image)
 
     def rotate(self, r_rot):
@@ -944,6 +1133,69 @@ class TeleportCrosshair(Sprite):
                 "done", x=self.get_coords()[0], y=self.get_coords()[1])
 
 
+class DimensionalPlayer(Player):
+    def __init__(self):
+        super(DimensionalPlayer, self).__init__()
+
+        self.pos_x = 0.0
+        self.pos_y = 0.0
+        self._x = 1.0
+        self._y = 1.0
+
+    def on_update(self, evt):
+        if not self._pause:
+            pixels = 0
+
+            if self.up:
+                pixels = self.speed
+            if self.down:
+                pixels = -self.speed
+            if self.left:
+                self.rotate(+(evt.dt * 160))
+            if self.right:
+                self.rotate(-(evt.dt * 160))
+
+            import math
+
+            d = -(evt.dt * pixels)  # distance covered this tick.
+            angle_radians = math.radians(self.rotation)
+            dx = -math.cos(angle_radians)
+            dy = math.sin(angle_radians)
+
+            dx, dy = dx * d, dy * d
+
+            x, y = dx, dy
+
+            class Delta:
+                x = dx
+                y = dy
+
+            # evt.canvas.xview_scroll(dx)
+            # evt.canvas.yview_scroll(dy)
+            # Note canvas dimensions are used here
+            self.pos_x += float(self._x - Delta.x) / evt.canvas.winfo_width()
+            self.pos_y += float(self._y - Delta.y) / evt.canvas.winfo_height()
+
+            if self.pos_x < 0.0:
+                self.pos_x = 0.0
+            elif self.pos_x > 1.0:
+                self.pos_x = 1.0
+            if self.pos_y < 0.0:
+                self.pos_y = 0.0
+            elif self.pos_y > 1.0:
+                self.pos_y = 1.0
+
+            evt.canvas.xview("moveto", self.pos_x)
+            evt.canvas.yview("moveto", self.pos_y)
+
+            self._x = Delta.x
+            self._y = Delta.y
+
+            # print(self.up, self.left, self.down, self.right)
+            # print(x, y)
+            self.move(x, y)
+
+
 # noinspection PyAttributeOutsideInit
 class Ammo(Sprite):
     requires = tuple(list(Sprite.requires) + ["ship", "ammo"])
@@ -1016,8 +1268,6 @@ class Ammo(Sprite):
                     replace_list(ammo["ammo-damage"], ammo_index, ammo["ammo-damage"][ammo_index] + 1)
                     if ammo["ammo-damage"][ammo_index] > 4:
                         del_ammo(canvas, ammo_index, ammo)
-                    # # TODO: Replace with something like pygame's mixer'
-                    # Thread(None, PlaySound("versions/"+self.launcher_config["versionDir"]+"/assets/bubpop.wav", 1)).start()
                 elif bubble["bub-hardness"][index_bub] > 1:
                     replace_list(bubble["bub-hardness"], index_bub, bubble["bub-hardness"][index_bub] - 1)
                     replace_list(ammo["ammo-damage"], ammo_index, ammo["ammo-damage"][ammo_index] + 1)

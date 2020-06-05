@@ -424,11 +424,11 @@ class Registry(object):
 
     @classmethod
     def get_current_scene(cls):
-        return cls.get_scene("Game").scenemanager.currentScene
+        return cls.get_scene("qbubbles:game").scenemanager.currentScene
 
     @classmethod
     def get_scenemanager(cls):
-        return cls.get_scene("Game").scenemanager
+        return cls.get_scene("qbubbles:game").scenemanager
 
     @classmethod
     def register_scenemanager(cls, scenemanager):
@@ -473,10 +473,19 @@ class Registry(object):
         return tuple(cls._registryBubbles.values())
 
     @classmethod
-    def get_lname(cls, *args):
+    def get_lname(cls, *args, **kwargs):
         l_id = ".".join([*args])
+        # print(l_id)
+        kwargs.update(nl="\n")
+        # print(cls.gameData["language"])
         if l_id in cls.gameData["language"].keys():
-            return cls.gameData["language"][l_id]
+            # print(cls.gameData["language"])
+            # print(cls.gameData["language"][l_id])
+            # print(dict(kwargs))
+            try:
+                return cls.gameData["language"][l_id].format_map(kwargs)
+            except:
+                return l_id
         else:
             return l_id
 

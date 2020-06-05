@@ -47,7 +47,7 @@ class TeleportMode(Mode):
     def __init__(self):
         super(TeleportMode, self).__init__("teleport")
 
-        self.scene = Registry.get_scene("Game")
+        self.scene = Registry.get_scene("qbubbles:game")
 
     def stop_mode(self, *args, **kwargs):
         pass

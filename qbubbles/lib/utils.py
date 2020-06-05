@@ -4,6 +4,18 @@ import zipfile
 from PIL import Image, ImageTk, ImageDraw2, ImageDraw, ImageFont
 
 
+class Translate(object):
+    def __init__(self, from_, to_):
+        self.langFrom = from_
+        self.langTo = to_
+
+        import googletranslate as gtrans
+        self._gtrans = gtrans
+
+    def translate(self, text):
+        return self._gtrans.translate(text, self.langFrom, self.langTo)
+
+
 def extract_zipfile(path2zip: str, extract_path: str):
     zip_ref = zipfile.ZipFile(path2zip, 'r')
     zip_ref.extractall(extract_path)
@@ -188,6 +200,7 @@ def createbubble_image(size, inner_image: Image.Image = None, *colors):
     :param colors: The colors of the bubble.
     :return: ImageTk.PhotoImage instance. Has support for tkinter.
     """
+
     # Create base image for bubble (transparent)
     im = _new('RGBA', size, '#ffffff00')
     i = 2
@@ -198,11 +211,11 @@ def createbubble_image(size, inner_image: Image.Image = None, *colors):
     j = 0
     for circ_color in colors:
         if j != 0:
-            draw_ellipse(im, (0 + i, 0 + i, size[0] - i, size[0] - i), outline=circ_color, width=w, antialias=8)
+            draw_ellipse(im, (0 + i, 0 + i, size[0] - i - 1, size[1] - i - 1), outline=circ_color, width=w, antialias=4)
         elif j != len(colors):
-            draw_ellipse(im, (0 + i, 0 + i, size[0] - i, size[0] - i), outline=circ_color, width=w, antialias=8)
+            draw_ellipse(im, (0 + i, 0 + i, size[0] - i - 1, size[1] - i - 1), outline=circ_color, width=w, antialias=4)
         else:
-            draw_ellipse(im, (0 + i, 0 + i, size[0] - i, size[0] - i), outline=circ_color, width=w, antialias=8)
+            draw_ellipse(im, (0 + i, 0 + i, size[0] - i - 1, size[1] - i - 1), outline=circ_color, width=w, antialias=4)
         i += 1.5
         j += 1
 

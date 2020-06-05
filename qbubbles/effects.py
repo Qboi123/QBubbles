@@ -120,6 +120,8 @@ class AppliedEffect(object):
         self.baseObject: BaseEffect = baseclass
         self.baseUname: str = baseclass.get_uname()
 
+        assert type(baseclass) is not type
+
         active_effects = [applied_effect.baseObject for applied_effect in game.gameMap.player.appliedEffects]
         for base_effect in self.baseObject.incompatibles:
             if base_effect in active_effects:
@@ -224,10 +226,10 @@ class SpeedBoostEffect(BaseEffect):
     def __init__(self):
         super(SpeedBoostEffect, self).__init__()
 
-        self.set_uname()
+        self.set_uname("qbubbles:speedboost")
 
     def on_apply(self, effect: 'AppliedEffect', sprite):
-        sprite.speed += (effect.strength * sprite.baseSpeed) / 4
+        sprite.speed += (effect.strength * sprite.baseSpeed)
 
     def on_stop(self, effect: 'AppliedEffect', sprite):
         sprite.speed -= (effect.strength * sprite.baseSpeed)

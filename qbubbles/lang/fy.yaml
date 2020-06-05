@@ -1,0 +1,103 @@
+# Store text
+store.diamonds: "Diamanten: "
+store.coins: "Munten: "
+
+# Home Menu
+home.start: "START"
+home.quit: "SLUITEN"
+home.options: "OPTIES"
+
+# Game maps:
+gamemap.classic_map.name: "Ald spultype"
+
+# Pause Menu
+pause.back-to-home: "Bewarje en werom nei it haadmenu"
+
+# Slots Menu
+gui.qbubbles.slotsmenu.rename.name: "Omneame"
+gui.qbubbles.slotsmenu.remove.name: "Ferwiderje"
+gui.qbubbles.slotsmenu.reset.name: "Weromsette"
+gui.qbubbles.slotsmenu.back.name: "Werom"
+gui.qbubbles.slotsmenu.open.name: "Iepenje"
+gui.qbubbles.slotsmenu.add.name: "Nij"
+
+# Slots Menu
+slots.open: "Iepenje"
+slots.rename: "Omneame"
+slots.remove: "Ferwiderje"
+slots.add: "Nij"
+slots.reset: "Weromsette"
+
+# Options
+options.language: "Taal"
+options.name: "Frysk"
+options.save: "Bewarje"
+
+# Items
+item.unlck_lvl: "Nivo omheech"
+item.teleport: "Energy"
+item.protect: "Beskerming"
+item.diamond: "Diamant"
+item.extra_life: "Ekstra libben"
+item.pop3bubs: "Pop 3 bubbels"
+item.two_extlives: "2 ekstra libbens"
+item.spdboost: "Turbo boost."
+item.ultamode: "Ultramodus"
+item.double_pnt: "Dûbele skoare"
+item.plus10: "+10 punten"
+item.plus100: "+100 punten"
+item.plus200: "+200 punten"
+item.plus500: "+500 punten"
+
+# Bubbles
+bubble.qbubbles.speedboost_bubble.name: "Faasje"
+bubble.qbubbles.damage_bubble.name: "Skea"
+bubble.qbubbles.healer_bubble.name: "Ekstra libben"
+bubble.qbubbles.normal_bubble.name: "Gewoane bubble"
+bubble.qbubbles.decuple_value.name: "10x Wearde"
+bubble.qbubbles.decuple_state.name: "10x Status"
+bubble.qbubbles.shotspdstate.name: "Fast Shoot"
+bubble.qbubbles.double_value.name: "2x Wearde"
+bubble.qbubbles.triple_value.name: "3x Wearde"
+bubble.qbubbles.double_state.name: "2x Status"
+bubble.qbubbles.triple_state.name: "3x Status"
+bubble.qbubbles.stonebubble.name: "Hurde Bubbel"
+bubble.qbubbles.specialkey.name: "Ultra Modus"
+bubble.qbubbles.slowmotion.name: "Slow Motion"
+bubble.qbubbles.energy_bubble.name: "Energy"
+bubble.qbubbles.confusion.name: "Betizing"
+bubble.qbubbles.timebreak.name: "Befrieze Bubbels"
+bubble.qbubbles.hypermode.name: "Hypermodus"
+bubble.qbubbles.levelkey.name: "Level Key"
+bubble.qbubbles.ultimate.name: "Spesjale Bubble"
+bubble.qbubbles.paralyse.name: "Petrified"
+bubble.qbubbles.notouch.name: "Ghost Mode"
+bubble.qbubbles.present.name: "Oanwêzich"
+bubble.qbubbles.protect.name: "Beskerming"
+bubble.qbubbles.diamond.name: "Diamant"
+bubble.qbubbles.coin.name: "Munt"
+
+# Effects
+effect.qbubbles.score_multiplier.name: "Meardere skoare"
+effect.qbubbles.speedboost.name: "Fersnelling"
+
+# Popups
+popup.levelup: "Level "
+
+# Infos
+info.state.slowmotion: "Slowmotion"
+info.state.shotspeed: "Schiet snelh."
+info.state.confusion: "Verwarring"
+info.state.timebreak: "Timebreak"
+info.state.spdboost: "Turbo"
+info.state.protect: "Schild stat."
+info.state.notouch: "Geest stat."
+info.state.paralyse: "Verstijv."
+info.state.score: "Score stat."
+info.diamonds: "Diamanten"
+info.speed: "Snelheid"
+info.coins: "Munten"
+info.lives: "Levens"
+info.score: "Score"
+info.level: "Level"
+info.tps: "Teleports"

@@ -246,14 +246,14 @@ def control(modes, config, root, canvas, stats, bubbles, back, texts, commands, 
         temp["qbubbles:pause.frame"] = temp["qbubbles:pause.sw"].scrollwindow
 
         a = ("Normal", "Double", "Kill", "Triple", "SpeedUp", "SpeedDown", "Up", "Ultimate", "DoubleState",
-             "Protect", "SlowMotion", "TimeBreak", "Confusion", "HyperMode", "Teleporter",
+             "Protect", "SlowMotion", "TimeBreak", "Confusion", "HyperMode", "energy_bubble",
              "Coin", "NoTouch", "Paralyse", "Diamond", "StoneBub", "Present", "SpecialKey", "LevelKey")
 
         canvas = (
             "bubble.normal", "bubble.double", "bubble.kill", "bubble.triple", "bubble.speedup", "bubble.speeddown",
             "bubble.up", "bubble.state.ultimate", "bubble.state.double", "bubble.state.protect",
             "bubble.state.slowmotion",
-            "bubble.state.timebreak", "bubble.state.confusion", "bubble.state.hypermode", "bubble.teleporter",
+            "bubble.state.timebreak", "bubble.state.confusion", "bubble.state.hypermode", "bubble.energy_bubble",
             "bubble.coin", "bubble.state.notouch", "bubble.state.paralyse", "bubble.diamond", "bubble.stonebubble",
             "bubble.present", "bubble.state.specialkey", "bubble.levelkey")
 
@@ -443,22 +443,19 @@ class Game(CanvasScene):
         # Getting save-name and copy this in the self.
         self.saveName = save_name
 
-        gameDir = Registry.gameData['launcherConfig']['gameDir']
+        gamedir = Registry.gameData['launcherConfig']['gameDir']
 
         # Reload stats with the reader.
-        Registry.saveData["Game"] = Reader(f"{gameDir}saves/{self.saveName}/game.dill").get_decoded()
+        Registry.saveData["Game"] = Reader(f"{gamedir}saves/{self.saveName}/game.dill").get_decoded()
 
         # Game Maps
-        gameMap = Registry.get_gamemap(Registry.saveData["Game"]["GameMap"]["id"])
-        gameMap.load_savedata(f"{gameDir}saves/{self.saveName}")
-        # # Create canvas.
-        # self.canvas = Canvas(self.root, height=Registry.gameData["WindowHeight"],
-        #                      width=Registry.gameData["WindowWidth"], highlightthickness=0)
-        # self.canvas.pack(expand=True)
+        gamemap = Registry.get_gamemap(Registry.saveData["Game"]["GameMap"]["id"])
+        gamemap.load_savedata(f"{gamedir}saves/{self.saveName}")
+
+        # Log
+        Logging.info("GameScene", f"Saved data is loaded, game map uname is '{Registry.saveData['Game']['GameMap']['id']}'")
 
         # Run the main method (function).
-        Logging.info("GameScene", f"Saved data is loaded, game map is '{Registry.saveData['Game']['GameMap']['id']}'")
-
         self.main()
 
     @staticmethod
@@ -472,16 +469,20 @@ class Game(CanvasScene):
         Return to title screen
         :return:
         """
+
         # Returning to title menu.
-        # Maintance().auto_save(self.saveName, Registry.saveData)
-        # self.returnmain = True
         self.canvas.destroy()
         self.canvas = Canvas(self.frame, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
+
+        # Summon game exit event.
         GameExitEvent(self, self.saveName)
+
+        # Wipe savedata from memory
         Registry.saveData = []
-        self.scenemanager.change_scene("TitleScreen")
-        self.__init__()
+
+        # Change Scene
+        self.scenemanager.change_scene("qbubbles:title")
 
     def on_keyrelease(self, evt: KeyReleaseEvent):
         """
@@ -495,7 +496,7 @@ class Game(CanvasScene):
         if evt.char.lower() == "r":
             # self._pauseMode = True
             # PauseEvent(self, self.canvas, self.temp, True)
-            # self.scenemanager.change_scene("Store")
+            # self.scenemanager.change_scene("qbubbles:store")
             pass  # TODO: Implement to change to Store()-scene, when possible.
         if evt.keySym.lower() == "esc" or evt.keySym.lower() == "escape":
             if self._pauseMode is False:
@@ -590,13 +591,13 @@ class Game(CanvasScene):
         # self.temp["qbubbles:pause.frame"] = self.temp["qbubbles:pause.sw"].scrollwindow
         #
         # a = ("Normal", "Double", "Kill", "Triple", "SpeedUp", "SpeedDown", "Up", "Ultimate", "DoubleState",
-        #      "Protect", "SlowMotion", "TimeBreak", "Confusion", "HyperMode", "Teleporter",
+        #      "Protect", "SlowMotion", "TimeBreak", "Confusion", "HyperMode", "energy_bubble",
         #      "Coin", "NoTouch", "Paralyse", "Diamond", "StoneBub", "Present", "SpecialKey", "LevelKey")
         #
         # c = ("bubble.normal", "bubble.double", "bubble.kill", "bubble.triple", "bubble.speedup", "bubble.speeddown",
         #      "bubble.up", "bubble.state.ultimate", "bubble.state.double", "bubble.state.protect",
         #      "bubble.state.slowmotion",
-        #      "bubble.state.timebreak", "bubble.state.confusion", "bubble.state.hypermode", "bubble.teleporter",
+        #      "bubble.state.timebreak", "bubble.state.confusion", "bubble.state.hypermode", "bubble.energy_bubble",
         #      "bubble.coin", "bubble.state.notouch", "bubble.state.paralyse", "bubble.diamond", "bubble.stonebubble",
         #      "bubble.present", "bubble.state.specialkey", "bubble.levelkey")
         #
@@ -988,7 +989,7 @@ class Game(CanvasScene):
         UpdateEvent.bind(self.on_update)
         LoadCompleteEvent(self, self.saveName)
         KeyReleaseEvent.bind(self.on_keyrelease)
-        # KeyPressEvent.bind(self.on_keypress)
+        # KeyPressEvent.bind(self.on_keypress)  # Fixme: Add On Key Press event handler to game.
 
         Logging.info("GameScene", "Save loaded successfully, starting mainloop.")
 

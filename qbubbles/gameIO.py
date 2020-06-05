@@ -1,18 +1,42 @@
+import builtins
+import io
 import sys as _sys
 import os as _os
 import typing as _t
 from time import strftime
 
 
-def printerr(*text, sep=' ', end='\n'):
-    print("ERROR:", *text, sep=sep, end=end, file=_sys.stderr)
+# noinspection PyShadowingBuiltins
+def print(*text, sep=" ", end="", file=_sys.stdout):
+    if file == _sys.stdout:
+        Logging.info("STDOUT", sep.join([str(text) for text in text])+end)
+    elif file == _sys.stderr:
+        Logging.info("STDERR", sep.join([str(text) for text in text])+end)
+    else:
+        Logging.info("PRINT", sep.join([str(text) for text in text])+end)
 
 
-def printwrn(*text, sep=' ', end='\n'):
-    print("WARNING:", *text, sep=sep, end=end, file=_sys.stderr)
+# TODO: Remove when this leads to serious problems.
+builtins.print = print
 
 
-class Logging:
+def printerr(*text, sep=" "):
+    Logging.error("STDERR", sep.join([*text]))
+
+
+def printwrn(*text, sep=" "):
+    Logging.warning("STDWRN", sep.join([*text]))
+
+
+def printdebug(*text, sep=" "):
+    Logging.debug("STDDBG", sep.join([*text]))
+
+
+def printfatal(*text, sep=" "):
+    Logging.fatal("STDFTL", sep.join([*text]))
+
+
+class Logging(object):
     """
     Logging class for logs
     """
@@ -23,6 +47,7 @@ class Logging:
     _pos: int
     _log_var: str
 
+    # noinspection PyCallByClass
     @classmethod
     def __new__(cls, clas, save_path):
         cls._tme = strftime
@@ -94,18 +119,18 @@ class Logging:
 
     @classmethod
     def warning(cls, cmd, message):
-        cls.log("WARNING", cmd, message, file=_sys.stdout)
+        cls.log("WARNING", cmd, message, file=_sys.stderr)
 
     @classmethod
     def error(cls, cmd, message):
-        cls.log("ERROR", cmd, message, file=_sys.stdout)
+        cls.log("ERROR", cmd, message, file=_sys.stderr)
 
     @classmethod
     def fatal(cls, cmd, message):
-        cls.log("FATAL", cmd, message, file=_sys.stdout)
+        cls.log("FATAL", cmd, message, file=_sys.stderr)
         cls.save()
-        raise Exception(f"{cmd}: {message}")
         _sys.exit(1)
+        # raise Exception(f"{cmd}: {message}")
 
     @classmethod
     def save(cls):
@@ -117,6 +142,6 @@ class Logging:
 
         # print(cls.save_file)
 
-        fa = open(cls.save_file, "w")
+        fa = io.open(cls.save_file, "w", encoding="utf-8")
         fa.write(cls.txtlog)
         fa.close()

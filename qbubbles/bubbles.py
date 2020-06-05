@@ -1,17 +1,16 @@
 import string
 import typing as _t
 from tkinter import Canvas
-from typing import Optional, List, NoReturn
+from typing import Optional, List, NoReturn, Dict, Any, Union
 
 import qbubbles.effects
 from qbubbles import effects
 from qbubbles.events import UpdateEvent, CleanUpEvent, CollisionEvent, PauseEvent
-from qbubbles.gameIO import Logging
-
-from qbubbles.sprites import Sprite, SpriteData
 from qbubbles.exceptions import UnlocalizedNameError
 from qbubbles.registry import Registry
+from qbubbles.sprite.abilities import TeleportAbility
 from qbubbles.sprites import Player
+from qbubbles.sprites import Sprite
 
 
 class Bubble(object):
@@ -79,9 +78,15 @@ class BubbleObject(Sprite):
             Description: The starting health of the bubble, must not be changed after creation. \n
             Type: ``float`` or ``int``.
 
-        :param baseobject:
-        :param maxhealth:
-        :param basehealth:
+        :param speed: The speed of the bubble.
+        :param radius: The radius of the bubble.
+        :param health: The health of the bubble.
+        :param scoremp: The score multiplier of the bubble.
+        :param attackmp: The attack multiplier of the bubble.
+        :param maxhealth: The maximum health of the bubble
+        :param defensemp: The defense multiplier of the bubble.
+        :param baseobject: The base object of the bubble
+        :param basehealth: The base health of the bubble
         """
 
         super(BubbleObject, self).__init__()
@@ -162,7 +167,12 @@ class BubbleObject(Sprite):
         # self._objectData["Position"] = (x, y)
 
     def reload(self, odata: dict):
-        raise Exception("Test exception, reload is called!")
+        """
+        Reload the bubble object.
+
+        :param odata: The object data.
+        :return: None
+        """
 
         if self.id is not None:
             raise OverflowError(f"BubbleObject is already created")
@@ -173,7 +183,7 @@ class BubbleObject(Sprite):
             # Start the effect using saved effect data. Using the object-data (odata) given from the arguments.
             if effectdata["duration"] > 0.0:
                 self.start_effect(
-                    effect, Registry.get_scene("Game"), effectdata["duration"], effectdata["strength"],
+                    effect, Registry.get_scene("qbubbles:game"), effectdata["duration"], effectdata["strength"],
                     **dict(effectdata["extradata"]))
 
         attributes = odata["Attributes"]
@@ -200,9 +210,9 @@ class BubbleObject(Sprite):
         self.isInvulnerable = switches["isInvulnerable"]
 
         # Create bubble image.
-        self.id = Registry.get_scene("Game").canvas.create_image(
+        self.id = Registry.get_scene("qbubbles:game").canvas.create_image(
             *odata["Position"], image=Registry.get_texture(
-                "qbubbles:bubble", self.baseObject.get_uname(), radius=self.radius))
+                "qbubbles:bubble", self.baseObject.get_uname(), radius=int(self.radiusF * 2)))
 
         self.teleport(*odata["Position"])
 
@@ -216,23 +226,25 @@ class BubbleObject(Sprite):
         """
         Adds an effect, must be an AppliedEffect()-instance. For starting a new effect, use start_effect() instead.
 
-        :param appliedeffect:
-        :return:
+        :param appliedeffect: The applied-effect instance to add.
+        :returns: The added applied-effect instance.
         """
 
         self.appliedEffects[appliedeffect] = appliedeffect.baseObject
         # self.appliedEffectTypes.append(type(appliedeffect))
+        return appliedeffect
 
     def remove_effect(self, appliedeffect: effects.AppliedEffect):
         """
         Removes an applied-effect from the player's effect list.
 
         :param appliedeffect: The applied-effect to remove.
-        :return:
+        :returns: The removed applied-effect.
         """
 
         # index = self.appliedEffects.index(appliedeffect)
         del self.appliedEffects[appliedeffect]
+        return appliedeffect
 
     def start_effect(self, effect_class: effects.BaseEffect, scene, duration: float, strength: _t.Union[float, int],
                      **extradata) -> effects.AppliedEffect:
@@ -244,8 +256,8 @@ class BubbleObject(Sprite):
         :param duration: The duration of the effect.
         :param strength: The strength of the effect
         :param extradata: The extra data to add to the effect.
+        :returns: The started applied-effect.
         :raises AssertionError: If the effect-class is a type.
-        :returns: The applied-effect
         """
 
         assert not isinstance(effect_class, type)
@@ -256,7 +268,42 @@ class BubbleObject(Sprite):
         return appliedeffect
 
     # noinspection PyDictCreation
-    def get_objectdata(self):
+    def get_objectdata(self) -> _t.Dict[str, _t.Union[list, List[_t.Dict[str, int]], _t.Dict[str, _t.Union[int, float]],
+                                                      _t.Dict[str, _t.Union[int, float]], _t.Dict[str, bool],
+                                                      _t.Dict[str, int], str]]:
+        """
+        Get object data, of the bubble object.
+
+        Dictionary:
+        --------------------------------------------
+        ``Position``: The position of the bubble.\n
+        ``Effects``: The active effects of the bubble.\n
+        ``Abilities``: The abilities of the bubble.\n
+        ``Bases``: The base attributes of the bubble:
+            ``speed``: The base speed of the bubble.\n
+            ``radius``: The base radius of the bubble.\n
+            ``radiusF``: The float version of the base radius.\n
+            ``health``: The base health of the bubble.\n
+        ``Attributes``: The dynamic attributes of the bubble.
+            ``maxHealth``: The maximum health of the bubble.\n
+            ``health``: The health of the bubble.\n
+            ``radius``: The radius of the bubble.\n
+            ``radiusF``: The float version of the radius.\n
+            ``speed``: The speed of the bubble.\n
+        ``Switches``: The switches of the bubble.
+            ``allowCollision``: Whether the bubble should allow collision.\n
+            ``isInvulnerable``: Whether the bubble should be invulnerable.\n
+        ``Modifiers``: The modifiers of the bubble, mostly multipliers.
+            ``scoreMultiplier``: The score multiplier of the bubble.\n
+            ``regenMultiplier``: The regeneration multiplier of the bubble.\n
+            ``attackMultiplier``: The attack multiplier of the bubble.\n
+            ``defenseMultiplier``: The defense multiplier of the bubble.\n
+        ``ID``: The unlocalized name of the bubble.\n
+
+        :returns: The dictionary of the object data of the bubble, see the Dictionary section in this docstring for more
+         information.
+        """
+
         odata = {}
 
         # Position, Effects and Abilities
@@ -265,7 +312,7 @@ class BubbleObject(Sprite):
         odata["Abilities"] = [ability.get_data() for ability in self.abilities]
 
         # Bases
-        bases = {}
+        bases: Dict[str, Union[Union[int, float], Any]] = {}
         bases["speed"] = self.baseSpeed
         bases["radius"] = self.baseRadius
         bases["radiusF"] = self.baseRadiusF
@@ -273,7 +320,7 @@ class BubbleObject(Sprite):
         odata["Bases"] = bases
 
         # Attributes
-        attributes = {}
+        attributes: Dict[str, Union[int, float]] = {}
         attributes["maxHealth"] = self.maxHealth
         attributes["health"] = self.health
         attributes["radius"] = self.radius
@@ -281,12 +328,13 @@ class BubbleObject(Sprite):
         attributes["speed"] = self.speed
         odata["Attributes"] = attributes
 
-        switches = {}
+        switches: Dict[str, bool] = {}
         switches["allowCollision"] = self.allowCollision
+        switches["isInvulnerable"] = self.isInvulnerable
         odata["Switches"] = switches
 
         # Modifiers
-        modifiers = {}
+        modifiers: Dict[str, Union[int, Any]] = {}
         modifiers["regenMultiplier"] = self.regenMultiplier
         modifiers["scoreMultiplier"] = self.scoreMultiplier
         modifiers["attackMultiplier"] = self.attackMultiplier
@@ -322,7 +370,7 @@ class BubbleObject(Sprite):
                                        f"a Bubble-instance instead of NoneType to fix this problem")
         if self.id is not None:
             raise OverflowError(f"BubbleObject is already created")
-        canvas: Canvas = Registry.get_scene("Game").canvas
+        canvas: Canvas = Registry.get_scene("qbubbles:game").canvas
 
         # Logging.debug("BubbleObject", f"Creation RadiusF: {self.radiusF}")
         # Logging.debug("BubbleObject", f"Creation Radius: {self.radius}")
@@ -340,7 +388,7 @@ class BubbleObject(Sprite):
         # print(f"Created Bubble\n Bubble Object Representation: {repr(self)}")
 
     def on_update(self, evt: UpdateEvent):
-        # game_map = Registry.get_scene("Game").gameMap
+        # game_map = Registry.get_scene("qbubbles:game").gameMap
         if not self._pause:
             spd_mpy = evt.scene.gameMap.player.score / 10000
             spd_mpy /= 2
@@ -351,6 +399,7 @@ class BubbleObject(Sprite):
     def save(self):
         return dict(self._spriteData)
 
+    # noinspection PyUnusedLocal
     def on_cleanup(self, evt: CleanUpEvent):
         if self.dead:
             UpdateEvent.unbind(self.on_update)
@@ -427,7 +476,7 @@ class DoubleStateBubble(Bubble):
     def on_collision(self, bubbleobject: BubbleObject, other_object: Sprite):
         if other_object.get_sname() == "qbubbles:player":
             other_object: Player
-            scene = Registry.get_scene("Game")
+            scene = Registry.get_scene("qbubbles:game")
             other_object.start_effect(qbubbles.effects.ScoreMultiplierEffect(), scene,
                                       scene.gameMap.randoms["qbubbles:effect.duration"][0].randint(12, 17), 2)
 
@@ -451,9 +500,49 @@ class TripleStateBubble(Bubble):
     def on_collision(self, bubbleobject: BubbleObject, other_object: Sprite):
         if other_object.get_sname() == "qbubbles:player":
             other_object: Player
-            scene = Registry.get_scene("Game")
+            scene = Registry.get_scene("qbubbles:game")
             other_object.start_effect(qbubbles.effects.ScoreMultiplierEffect(), scene,
                                       scene.gameMap.randoms["qbubbles:effect.duration"][0].randint(7, 10), 3)
+
+
+class DecupleBubble(Bubble):
+    def __init__(self):
+        super(DecupleBubble, self).__init__()
+
+        self.priority = 1000
+
+        self.minRadius: int = 21
+        self.maxRadius: int = 80
+        self.minSpeed: int = 40
+        self.maxSpeed: int = 96
+        self.scoreMultiplier: float = 3
+        self.attackMultiplier: float = 0
+
+        self.set_uname("qbubbles:decuple_value")
+
+
+class DecupleStateBubble(Bubble):
+    def __init__(self):
+        super(DecupleStateBubble, self).__init__()
+
+        self.priority = 150
+
+        self.minRadius: int = 21
+        self.maxRadius: int = 80
+        self.minSpeed: int = 40
+        self.maxSpeed: int = 96
+
+        self.scoreMultiplier: float = 10
+        self.attackMultiplier: float = 0
+
+        self.set_uname("qbubbles:decuple_state")
+
+    def on_collision(self, bubbleobject: BubbleObject, other_object: Sprite):
+        if other_object.get_sname() == "qbubbles:player":
+            other_object: Player
+            scene = Registry.get_scene("qbubbles:game")
+            other_object.start_effect(qbubbles.effects.ScoreMultiplierEffect(), scene,
+                                      scene.gameMap.randoms["qbubbles:effect.duration"][0].randint(12, 17), 10)
 
 
 class DamageBubble(Bubble):
@@ -517,23 +606,47 @@ class SpeedupBubble(Bubble):
                 other_object.baseSpeed += int((bubbleobject.baseRadius / 5) + 5)
 
 
-class TeleportBubble(Bubble):
+class SpeedBoostBubble(Bubble):
     def __init__(self):
-        super(TeleportBubble, self).__init__()
+        super(SpeedBoostBubble, self).__init__()
 
-        self.priority = 10
+        self.priority = 15000
+
+        self.minRadius: int = 10
+        self.maxRadius: int = 50
+        self.minSpeed: int = 116
+        self.maxSpeed: int = 228
+
+        self.scoreMultiplier: float = 1
+        self.attackMultiplier: float = 0
+
+        self.set_uname("qbubbles:speedboost_bubble")
+
+    def on_collision(self, bubbleobject: BubbleObject, other_object: Sprite):
+        if other_object.get_sname() == "qbubbles:player":
+            other_object: Player
+            other_object.start_effect(qbubbles.effects.SpeedBoostEffect(), Registry.get_scene("qbubbles:game"), 15, 1.0625)
+
+
+class EnergyBubble(Bubble):
+    def __init__(self):
+        super(EnergyBubble, self).__init__()
+
+        self.priority = 10000
 
         self.minRadius: int = 5
         self.maxRadius: int = 30
-        self.minSpeed: int = 136
+        self.minSpeed: int = 116
         self.maxSpeed: int = 204
 
         self.scoreMultiplier: float = 1
         self.attackMultiplier: float = 0
 
-        self.set_uname("qbubbles:teleport_bubble")
+        self.set_uname("qbubbles:energy_bubble")
 
     def on_collision(self, bubbleobject: BubbleObject, other_object: Player):
         if other_object.get_sname() == "player":
-            other_object.get_ability("qbubbles:teleport")["value"] = \
-                bubbleobject.baseSpeed / bubbleobject.baseObject.maxSpeed * 2
+            # if TeleportAbility not in [type(ability) for ability in other_object.abilities]:
+            #     other_object.abilities.append(TeleportAbility(other_object))
+            other_object.abilityEnergy += \
+                ((bubbleobject.baseSpeed / 2) / bubbleobject.baseObject.maxSpeed * (20 - 2)) + 2

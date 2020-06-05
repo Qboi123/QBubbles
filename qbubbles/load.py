@@ -1,3 +1,4 @@
+import io
 import json
 import os as _os
 import string
@@ -45,7 +46,7 @@ class Load(_scenemngr.CanvasScene):
         super(Load, self).show_scene(*args, **kwargs)
         self.initialize()
 
-    # noinspection PyPep8Naming
+    # noinspection PyPep8Naming,PyAttributeOutsideInit
     def initialize(self):
         config_ = _config.Reader(
             "config/startup.dill").get_decoded()
@@ -53,8 +54,11 @@ class Load(_scenemngr.CanvasScene):
         _gameIO.Logging(_os.path.join(_reg.Registry.gameData['launcherConfig']['gameDir'], "logs"))
         _gameIO.Logging.info("GameLoader", "Logging started.")
 
-        with open("lang/" + config_["Game"]["language"] + ".yaml", "r") as file:
-            lang_ = yaml.safe_load(file.read())
+        try:
+            with io.open("lang/" + config_["Game"]["language"] + ".yaml", "r", encoding="utf-8") as file:
+                lang_ = yaml.safe_load(file.read())
+        except FileNotFoundError:
+            lang_ = {}
 
         _reg.Registry.gameData["config"] = config_
         _reg.Registry.gameData["language"] = lang_
@@ -129,60 +133,50 @@ class Load(_scenemngr.CanvasScene):
         modules = {}
         mainPackageNames = []
 
-        try:
-            for file in _os.listdir(mods_dir):
-                # print(file, os.path.isfile(f"{mods_dir}/{file}"), f"{mods_dir}/{file}")
-                # print(file)
-                if _os.path.isfile(f"{mods_dir}/{file}"):
-                    if file.endswith(".pyz"):
-                        a = zipimport.zipimporter(f"{mods_dir}/{file}")  # f"{file}.main", globals(), locals(), [])
-                        # print(dir(a))
-                        try:
-                            mainPackage = json.loads(a.get_data("qbubble-addoninfo.json"))["mainPackage"]
-                        except OSError:
-                            _gameIO.Logging.warning("ModLoader", f"Found non-addon file: {file}")
-                            continue
-                        if mainPackage in mainPackageNames:
-                            raise RuntimeError(f"Illegal package name '{mainPackage}'. "
-                                               f"Package name is already in use")
-
-                        if '.' in mainPackage:
-                            _gameIO.Logging.error("ModLoader", f"Illegal package name: '{mainPackage}'. "
-                                     f"Package name contains a dot")
-                            continue
-                        error = False
-                        for char in mainPackage[1:]:
-                            if char not in string.ascii_letters+string.digits:
-                                _gameIO.Logging.error("ModLoader", f"Illegal package name: '{mainPackage}'. "
-                                         f"Package name contains invalid character '{char}'")
-                                error = True
-                        if error:
-                            continue
-
-                        mainPackageNames.append(mainPackage)
-
-                        module = a.load_module(mainPackage)
-                        # _locals = {firstname: module}
-                        # _globals = {}
-                        # module = eval(f"{mainPackage}", _globals, _locals)
-                        # module = module.qplaysoftware.exampleaddon
-                        if a.find_module("qbubbles") is not None:
-                            raise RuntimeError("Illegal module name: 'qbubbles'")
-                        modules[module.ADDONID] = a
-                        # print(a)
-                    else:
-                        if file.endswith(".disabled"):
-                            continue
+        for file in _os.listdir(mods_dir):
+            # print(file, os.path.isfile(f"{mods_dir}/{file}"), f"{mods_dir}/{file}")
+            # print(file)
+            if _os.path.isfile(f"{mods_dir}/{file}"):
+                if file.endswith(".pyz"):
+                    a = zipimport.zipimporter(f"{mods_dir}/{file}")  # f"{file}.main", globals(), locals(), [])
+                    # print(dir(a))
+                    try:
+                        mainPackage = json.loads(a.get_data("qbubble-addoninfo.json"))["mainPackage"]
+                    except OSError:
                         _gameIO.Logging.warning("ModLoader", f"Found non-addon file: {file}")
-        except Exception as e:
-            import traceback
-            _gameIO.Logging.fatal("ModLoader", "".join(list(traceback.format_exception(e.__class__, e, e.__traceback__))))
-            self.scenemanager.change_scene(
-                "qbubbles:ErrorScene",
-                "Addon loading failed",
-                "".join(list(traceback.format_exception_only(e.__class__, e)))
-            )
+                        continue
+                    if mainPackage in mainPackageNames:
+                        raise RuntimeError(f"Illegal package name '{mainPackage}'. "
+                                           f"Package name is already in use")
 
+                    if '.' in mainPackage:
+                        _gameIO.Logging.error("ModLoader", f"Illegal package name: '{mainPackage}'. "
+                                 f"Package name contains a dot")
+                        continue
+                    error = False
+                    for char in mainPackage[1:]:
+                        if char not in string.ascii_letters+string.digits:
+                            _gameIO.Logging.error("ModLoader", f"Illegal package name: '{mainPackage}'. "
+                                     f"Package name contains invalid character '{char}'")
+                            error = True
+                    if error:
+                        continue
+
+                    mainPackageNames.append(mainPackage)
+
+                    module = a.load_module(mainPackage)
+                    # _locals = {firstname: module}
+                    # _globals = {}
+                    # module = eval(f"{mainPackage}", _globals, _locals)
+                    # module = module.qplaysoftware.exampleaddon
+                    if a.find_module("qbubbles") is not None:
+                        raise RuntimeError("Illegal module name: 'qbubbles'")
+                    modules[module.ADDONID] = a
+                    # print(a)
+                else:
+                    if file.endswith(".disabled"):
+                        continue
+                    _gameIO.Logging.warning("ModLoader", f"Found non-addon file: {file}")
             # self.canvas.itemconfig(t0, fill="#ff0000")
             # self.canvas.itemconfig(t1, text="Addon loading failed!", fill="#ffa7a7")
             # self.canvas.itemconfig(t2, text=,
@@ -204,8 +198,6 @@ class Load(_scenemngr.CanvasScene):
         else:
             _gameIO.Logging.info("ModLoader", f"No addons found.")
 
-        # print(list(addon_ids))
-
         addons = []
         for addon_id in list(addon_ids):
             # print(repr(addon_id), type(addon_id))
@@ -218,159 +210,126 @@ class Load(_scenemngr.CanvasScene):
                     addon.zipimport = modules[addon.modID]
                 addons.append(addon())
 
-        # print(addons)
-
         _evts.PreInitializeEvent(self, self.canvas, t1, t2)
 
         # # Pre-Initialize
         # self.mod_loader.pre_initialize(self)
 
-        # =----- GAME MAPS -----= #
+        # ----------------------- #
+        #   LOADING & INITIALIZE  #
+        #        GAME MAPS        #
+        # ----------------------- #
         self.canvas.itemconfig(t1, text="Loading Gamemaps")
         self.canvas.itemconfig(t2, text="Initialize gamemaps")
         self.canvas.update()
 
         _gameIO.Logging.info("GameLoader", f"Loading Gamemaps...")
 
-        try:
-            gameMaps = _mapsInit.init_gamemaps()
-            i = 1
-            for gamemap in gameMaps:
-                self.canvas.itemconfig(t2, text=f"Register gamemap {i}/{len(gameMaps)}")
-                self.canvas.update()
+        gameMaps = _mapsInit.init_gamemaps()
+        i = 1
+        for gamemap in gameMaps:
+            self.canvas.itemconfig(t2, text=f"Register gamemap {i}/{len(gameMaps)}")
+            self.canvas.update()
 
-                _reg.Registry.register_gamemap(gamemap.get_uname(), gamemap)
-                i += 1
-        except Exception as e:
-            import traceback
-            _gameIO.printerr("".join(list(traceback.format_exception_only(e.__class__, e))))
-            self.scenemanager.change_scene(
-                "qbubbles:ErrorScene",
-                "Initialize Game Maps failed",
-                "".join(list(traceback.format_exception_only(e.__class__, e)))
-            )
+            _reg.Registry.register_gamemap(gamemap.get_uname(), gamemap)
+            i += 1
 
-        # =----- SPRITES -----= #
+        # --------------------- #
+        #  LOADING & INITIALIZE #
+        #        SPRITES        #
+        # --------------------- #
         self.canvas.itemconfig(t1, text="Loading Sprites")
         self.canvas.itemconfig(t2, text="Initialize sprites")
         self.canvas.update()
 
         _gameIO.Logging.info("GameLoader", f"Loading Sprites...")
 
-        try:
-            sprites = _spritesInit.init_sprites()
-            i = 1
-            for sprite in sprites:
-                self.canvas.itemconfig(t2, text=f"Register sprite {i}/{len(gameMaps)}")
-                self.canvas.update()
+        sprites = _spritesInit.init_sprites()
+        i = 1
+        for sprite in sprites:
+            self.canvas.itemconfig(t2, text=f"Register sprite {i}/{len(gameMaps)}")
+            self.canvas.update()
 
-                _reg.Registry.register_sprite(sprite.get_sname(), sprite)
-                i += 1
-        except Exception as e:
-            import traceback
-            _gameIO.printerr("".join(list(traceback.format_exception_only(e.__class__, e))))
-            self.scenemanager.change_scene(
-                "qbubbles:ErrorScene",
-                "Initialize Sprites failed"
-                "".join(list(traceback.format_exception_only(e.__class__, e)))
-            )
+            _reg.Registry.register_sprite(sprite.get_sname(), sprite)
+            i += 1
 
+        # --------------------- #
+        #  LOADING & INITIALIZE #
+        #        BUBBLES        #
+        # --------------------- #
         self.canvas.itemconfig(t1, text="Loading Bubbles")
         self.canvas.itemconfig(t2, text="Initialize bubbles")
         self.canvas.update()
 
         _gameIO.Logging.info("GameLoader", f"Loading Bubbles...")
 
-        try:
-            bubbleObjects = _bubblesInit.init_bubbles()
-            for bubbleObject in bubbleObjects:
-                self.canvas.itemconfig(t2, text=f"Register bubble {bubbleObject.get_uname()}")
-                _reg.Registry.register_bubble(bubbleObject.get_uname(), bubbleObject)
-            _bubSystem.BubbleSystem.init()
-        except Exception as e:
-            import traceback
-            _gameIO.printerr("".join(list(traceback.format_exception_only(e.__class__, e))))
-            self.scenemanager.change_scene(
-                "qbubbles:ErrorScene",
-                "Initialize Bubbles failed!",
-                "".join(list(traceback.format_exception_only(e.__class__, e)))
-            )
+        bubbleObjects = _bubblesInit.init_bubbles()
+        for bubbleObject in bubbleObjects:
+            self.canvas.itemconfig(t2, text=f"Register bubble {bubbleObject.get_uname()}")
+            _reg.Registry.register_bubble(bubbleObject.get_uname(), bubbleObject)
+        _bubSystem.BubbleSystem.init()
 
+        # --------------------- #
+        #  LOADING & INITIALIZE #
+        #     BUBBLE MODELS     #
+        # --------------------- #
         self.canvas.itemconfig(t2, text="Loading bubble models")
         self.canvas.update()
 
         _gameIO.Logging.info("GameLoader", f"Loading Bubble Models...")
 
-        try:
-            modelLoader = _res.ModelLoader()
-            modelsBubble = modelLoader.load_models("bubble")
+        modelLoader = _res.ModelLoader()
+        modelsBubble = modelLoader.load_models("bubble")
 
-            for bubbleObject in bubbleObjects:
-                if bubbleObject.get_uname().count(":") > 1:
-                    _gameIO.printerr(f"Illegal uname: {bubbleObject.get_uname()} has multiple ':' characters")
-                    self.scenemanager.change_scene(
-                        "qbubbles:ErrorScene",
-                        "Loading Bubble Models failed",
-                        f"Illegal uname: {bubbleObject.get_uname()} has multiple ':' characters")
-                uname = bubbleObject.get_uname().split(":")[-1]
-                modid = bubbleObject.get_uname().split(":")[0]
-                self.canvas.itemconfig(t2, text=f"Generating bubble image: qbubbles:{uname}")
-                self.canvas.update()
-                if bubbleObject.get_uname().split(":")[-1] not in modelsBubble.keys():
-                    _gameIO.printwrn(f"Bubble object with uname '{bubbleObject.get_uname().split(':')[-1]}' have no bubble model")
-                    continue
+        for bubbleObject in bubbleObjects:
+            if bubbleObject.get_uname().count(":") > 1:
+                _gameIO.printerr(f"Illegal uname: {bubbleObject.get_uname()} has multiple ':' characters")
+                self.scenemanager.change_scene(
+                    "qbubbles:ErrorScene",
+                    "Loading Bubble Models failed",
+                    f"Illegal uname: {bubbleObject.get_uname()} has multiple ':' characters")
+            uname = bubbleObject.get_uname().split(":")[-1]
+            modid = bubbleObject.get_uname().split(":")[0]
+            self.canvas.itemconfig(t2, text=f"Generating bubble image: qbubbles:{uname}")
+            self.canvas.update()
+            if bubbleObject.get_uname().split(":")[-1] not in modelsBubble.keys():
+                _gameIO.printwrn(f"Bubble object with uname '{bubbleObject.get_uname().split(':')[-1]}' have no bubble model")
+                continue
 
-                images = {}
-                images = modelLoader.generate_bubble_images(bubbleObject.minRadius, bubbleObject.maxRadius,
-                                                            modelsBubble[uname])
-                # for radius in range(bubbleObject.minRadius, bubbleObject.maxRadius):
-                #     colors = modelsBubble[uname]["Colors"]
-                #     images[radius] = utils.createbubble_image((radius, radius), None, *colors)
-                for radius, texture in images.items():
-                    _reg.Registry.register_texture("qbubbles:bubble", bubbleObject.get_uname(), texture, radius=radius)
-                _reg.Registry.register_bubble(bubbleObject.get_uname(), bubbleObject)
-        except Exception as e:
-            import traceback
-            _gameIO.printerr("".join(list(traceback.format_exception_only(e.__class__, e))))
-            self.scenemanager.change_scene(
-                "qbubbles:ErrorScene",
-                "Loading Bubble Models failed!",
-                "".join(list(traceback.format_exception_only(e.__class__, e)))
-            )
+            images = modelLoader.generate_bubble_images(bubbleObject.minRadius, bubbleObject.maxRadius,
+                                                        modelsBubble[uname])
+            for radius, texture in images.items():
+                _reg.Registry.register_texture("qbubbles:bubble", bubbleObject.get_uname(), texture, radius=radius)
+            _reg.Registry.register_bubble(bubbleObject.get_uname(), bubbleObject)
 
+        # ----------------------- #
+        #   LOADING & INITIALIZE  #
+        #      SPRITE MODELS      #
+        # ----------------------- #
         self.canvas.itemconfig(t1, text="Loading Sprites")
         self.canvas.itemconfig(t2, text="Load sprite models")
         self.canvas.update()
 
         _gameIO.Logging.info("GameLoader", f"Loading Sprite Models...")
 
-        try:
-            modelsSprite = modelLoader.load_models("sprite")
-            self.playerModel = modelsSprite["player"]
+        modelLoader = _res.ModelLoader()
+        modelsSprite = modelLoader.load_models("sprite")
+        self.playerModel = modelsSprite["player"]
 
-            for spriteName, spriteData in modelsSprite.items():
-                if spriteData["Rotation"]:
-                    degrees = spriteData['RotationDegrees']
-                    self.canvas.itemconfig(t2, text=f"Load images for {spriteName} 0 / {int(360 / degrees)}")
+        for spriteName, spriteData in modelsSprite.items():
+            if spriteData["Rotation"]:
+                degrees = spriteData['RotationDegrees']
+                self.canvas.itemconfig(t2, text=f"Load images for {spriteName} 0 / {int(360 / degrees)}")
+                self.canvas.update()
+                image = _PIL.Image.open(f"assets/textures/sprites/{spriteData['Image']['Name']}.png")
+                for degree in range(0, 360, spriteData["RotationDegrees"]):
+                    self.canvas.itemconfig(
+                        t2, text=f"Load images for {spriteName} {int(degree / degrees)} / {int(360 / degrees)}")
                     self.canvas.update()
-                    image = _PIL.Image.open(f"assets/textures/sprites/{spriteData['Image']['Name']}.png")
-                    for degree in range(0, 360, spriteData["RotationDegrees"]):
-                        self.canvas.itemconfig(
-                            t2, text=f"Load images for {spriteName} {int(degree / degrees)} / {int(360 / degrees)}")
-                        self.canvas.update()
-                        image_c: _PIL.Image.Image = image.copy()
-                        image_c = image_c.rotate(degree, resample=_PIL.Image.BICUBIC)
-                        _reg.Registry.register_texture("sprite", spriteName, _PIL.ImageTk.PhotoImage(image_c), rotation=degree)
-                    # print(Registry._registryTextures)
-        except Exception as e:
-            import traceback
-            _gameIO.printerr("".join(list(traceback.format_exception_only(e.__class__, e))))
-            self.scenemanager.change_scene(
-                "qbubbles:ErrorScene",
-                "Loading Sprite Models failed!",
-                "".join(list(traceback.format_exception_only(e.__class__, e)))
-            )
-
+                    image_c: _PIL.Image.Image = image.copy()
+                    image_c = image_c.rotate(degree, resample=_PIL.Image.BICUBIC)
+                    _reg.Registry.register_texture("sprite", spriteName, _PIL.ImageTk.PhotoImage(image_c), rotation=degree)
+                # print(Registry._registryTextures)
 
         # # TODO: Remove this and use Registry.get_bubresource(...) as above (with .yml files for bubble-models)
         # self.canvas.itemconfig(t2, text="Creating Dicts")
@@ -386,7 +345,7 @@ class Load(_scenemngr.CanvasScene):
         # Registry.gameData["BubbleImage"]["SpeedDown"] = dict()
         # Registry.gameData["BubbleImage"]["Ultimate"] = dict()
         # Registry.gameData["BubbleImage"]["Up"] = dict()
-        # Registry.gameData["BubbleImage"]["Teleporter"] = dict()
+        # Registry.gameData["BubbleImage"]["energy_bubble"] = dict()
         # Registry.gameData["BubbleImage"]["SlowMotion"] = dict()
         # Registry.gameData["BubbleImage"]["DoubleState"] = dict()
         # Registry.gameData["BubbleImage"]["Protect"] = dict()
@@ -415,7 +374,7 @@ class Load(_scenemngr.CanvasScene):
         #     Registry.gameData["BubbleImage"]["Up"][i] = utils.createbubble_image((i, i), None, "#00ff00", "#00ff00", "#00000000", "#00ff00")
         #     Registry.gameData["BubbleImage"]["Ultimate"][i] = utils.createbubble_image((i, i), None, "gold", "gold", "orange", "gold")
         #     Registry.gameData["BubbleImage"]["Kill"][i] = utils.createbubble_image((i, i), None, "#7f0000", "#7f007f", "#7f0000",)
-        #     Registry.gameData["BubbleImage"]["Teleporter"][i] = utils.createbubble_image((i, i), None, "#7f7f7f", "#7f7f7f", "#ff1020", "#373737")
+        #     Registry.gameData["BubbleImage"]["energy_bubble"][i] = utils.createbubble_image((i, i), None, "#7f7f7f", "#7f7f7f", "#ff1020", "#373737")
         #     Registry.gameData["BubbleImage"]["SlowMotion"][i] = utils.createbubble_image((i, i), None, "#ffffffff", "#00000000", "#000000ff")
         #     Registry.gameData["BubbleImage"]["DoubleState"][i] = utils.createbubble_image((i, i), None, "gold", "#00000000", "gold", "gold")
         #     Registry.gameData["BubbleImage"]["Protect"][i] = utils.createbubble_image((i, i), None, "#00ff00", "#3fff3f", "#7fff7f", "#9fff9f")
@@ -648,13 +607,21 @@ class Load(_scenemngr.CanvasScene):
         # Register Scenes
         self.canvas.itemconfig(t1, text="Loading Scenes")
         self.canvas.itemconfig(t2, text="Title Screen")
-        _reg.Registry.register_scene("TitleScreen", _titleMenu.TitleMenu())
+        _reg.Registry.register_scene("qbubbles:title", _titleMenu.TitleMenu())
         self.canvas.itemconfig(t2, text="Saves Menu")
-        _reg.Registry.register_scene("SaveMenu", _scenes.SavesMenu())
+        _reg.Registry.register_scene("qbubbles:saves", _scenes.SavesMenu())
+        self.canvas.itemconfig(t2, text="Options Menu")
+        _reg.Registry.register_scene("qbubbles:options", _scenes.OptionsMenu())
+        self.canvas.itemconfig(t2, text="Language Menu")
+        _reg.Registry.register_scene("qbubbles:languagemenu", _scenes.LanguageMenu())
+        self.canvas.itemconfig(t2, text="Google Translate Updater")
+        _reg.Registry.register_scene("qbubbles:gtransupdatemenu", _scenes.GTransScene())
+        self.canvas.itemconfig(t2, text="Google Translation Installer")
+        _reg.Registry.register_scene("qbubbles:gtransinstaller", _scenes.GTransInstallScene())
         self.canvas.itemconfig(t2, text="Store")
-        _reg.Registry.register_scene("Store", _components.Store())
+        _reg.Registry.register_scene("qbubbles:store", _components.Store())
         self.canvas.itemconfig(t2, text="Game")
-        _reg.Registry.register_scene("Game", _game.Game())
+        _reg.Registry.register_scene("qbubbles:game", _game.Game())
 
         # Registry.register_mode("teleport", TeleportMode())
 
@@ -663,7 +630,7 @@ class Load(_scenemngr.CanvasScene):
         self.canvas.itemconfig(t1, text="DONE!")
         self.canvas.itemconfig(t2, text="")
 
-        self.scenemanager.change_scene("TitleScreen")
+        self.scenemanager.change_scene("qbubbles:title")
         return
 
         # # Setting background from nothing to normal.

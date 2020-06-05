@@ -41,6 +41,7 @@ gui.qbubbles.slotsmenu.add.type: "Type:"
 
 # Options Menu
 gui.qbubbles.options.language.name: "Language"
+gui.qbubbles.options.updategtrans.name: "Update Translations"
 gui.qbubbles.options.goback.name: "Go back to title screen"
 
 # Language Menu

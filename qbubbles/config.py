@@ -20,7 +20,7 @@ class Reader(object):
 
 class Writer(object):
     def __init__(self, config_file, obj):
-        self.data = data = obj
+        self.data = obj
 
         with open(config_file, "wb+") as file:
             dill.dump(config_file, file)

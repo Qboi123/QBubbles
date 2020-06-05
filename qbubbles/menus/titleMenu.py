@@ -9,6 +9,8 @@ import qbubbles.registry as _reg
 import qbubbles.scenemanager as _scenemgr
 import qbubbles.utils as _utils
 import qbubbles.gameIO as _gameIO
+from qbubbles.events import LanguageChangeEvent
+from qbubbles.scenes import get_lname
 
 
 class TitleMenu(_scenemgr.Scene):
@@ -18,7 +20,6 @@ class TitleMenu(_scenemgr.Scene):
         """
 
         super(TitleMenu, self).__init__(_reg.Registry.get_window("default"))
-
 
         self.lang = _reg.Registry.gameData["language"]
         self.config = _reg.Registry.gameData["config"]
@@ -33,13 +34,13 @@ class TitleMenu(_scenemgr.Scene):
         # Create buttons
         self.start_btn = _tk.Button(
             self.frame, bg="#007f7f", fg="#7fffff", bd=15, command=lambda: self.play_event(),
-            text=self.lang["home.start"], relief="flat", font=self.btnFont.get_tuple())
+            text=get_lname("home.start"), relief="flat", font=self.btnFont.get_tuple())
         self.quit_btn = _tk.Button(
             self.frame, bg="#007f7f", fg="#7fffff", bd=15, command=lambda: _os.kill(_os.getpid(), 0),
-            text=self.lang["home.quit"], relief="flat", font=self.btnFont.get_tuple())
+            text=get_lname("home.quit"), relief="flat", font=self.btnFont.get_tuple())
         self.options_btn = _tk.Button(
-            self.frame, bg="#007f7f", fg="#7fffff", bd=15, text=self.lang["home.options"], relief="flat",
-            font=self.btnFont.get_tuple())
+            self.frame, bg="#007f7f", fg="#7fffff", bd=15, command=lambda: self.options_event(),
+            text=get_lname("home.options"), relief="flat", font=self.btnFont.get_tuple())
 
         # Place buttons on screen
         self.start_btn.place(
@@ -56,6 +57,15 @@ class TitleMenu(_scenemgr.Scene):
         self.frame.update()
 
         self.loop_active = True
+
+        LanguageChangeEvent.bind(self.on_language_change)
+
+    def on_language_change(self, evt: LanguageChangeEvent):
+        self.lang = _reg.Registry.gameData["language"]
+
+        self.start_btn.configure(text=self.lang["home.start"])
+        self.quit_btn.configure(text=self.lang["home.quit"])
+        self.options_btn.configure(text=self.lang["home.options"])
 
     def mainloop(self):
         """
@@ -120,7 +130,7 @@ class TitleMenu(_scenemgr.Scene):
         :return:
         """
 
-        self.scenemanager.change_scene("SaveMenu")
+        self.scenemanager.change_scene("qbubbles:saves")
 
     def destroy(self):
         """
@@ -133,3 +143,6 @@ class TitleMenu(_scenemgr.Scene):
         self.background.destroy()
         self.start_btn.destroy()
         self.quit_btn.destroy()
+
+    def options_event(self):
+        self.scenemanager.change_scene("qbubbles:options")

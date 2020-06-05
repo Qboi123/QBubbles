@@ -1,0 +1,104 @@
+# Store text
+store: "दुकान"
+store.diamonds: "हीरे: "
+store.coins: "सिक्के: "
+
+# Game maps:
+gamemap.classic_map.name: "आउटडेटेड गेम प्रकार"
+
+# Home Menu
+home.start: "शुरू"
+home.quit: "छोड़"
+home.options: "विकल्प"
+
+# Pause Menu
+pause.back-to-home: "सहेजें और शीर्षक मेनू पर वापस जाएं"
+
+# Slots Menu
+gui.qbubbles.slotsmenu.rename.name: "नाम बदलें"
+gui.qbubbles.slotsmenu.remove.name: "हटाएं"
+gui.qbubbles.slotsmenu.reset.name: "रीसेट"
+gui.qbubbles.slotsmenu.back.name: "वापस"
+gui.qbubbles.slotsmenu.open.name: "खुला हुआ"
+gui.qbubbles.slotsmenu.add.name: "नया"
+
+# Options Menu
+gui.qbubbles.options.language.name: "भाषा: हिन्दी"
+gui.qbubbles.options.goback.name: "टाइटल स्क्रीन पर वापस जाएं"
+
+# Language Menu
+gui.qbubbles.languagemenu.select: "भाषा का चयन करें"
+gui.qbubbles.languagemenu.goback: "वापस"
+
+# Options
+options.language: "भाषा: हिन्दी"
+options.name: "हिन्दी (Hindi)"
+options.save: "सुरक्षित करें"
+
+# Items
+item.unlck_lvl: "अनलॉक स्तर"
+item.teleport: "टेलीपोर्टर"
+item.protect: "सुरक्षा"
+item.diamond: "हीरा"
+item.extra_life: "अतिरिक्त जिंदगी"
+item.pop3bubs: "पॉप 3 बुलबुले"
+item.two_extlives: "2 अतिरिक्त जीवन"
+item.spdboost: "टर्बो बढ़ावा"
+item.ultamode: "अल्ट्रा मोड"
+item.double_pnt: "दोहरा स्कोर"
+item.plus10: "+10 अंक"
+item.plus100: "+100 अंक"
+item.plus200: "+200 अंक"
+item.plus500: "+500 अंक"
+
+# Bubbles
+bubble.qbubbles.speedboost_bubble.name: "गति वृद्धि"
+bubble.qbubbles.damage_bubble.name: "नाशक"
+bubble.qbubbles.healer_bubble.name: "अतिरिक्त जिंदगी"
+bubble.qbubbles.normal_bubble.name: "सामान्य बुलबुला"
+bubble.qbubbles.decuple_value.name: "दस गुना मूल्य"
+bubble.qbubbles.decuple_state.name: "दस गुना राज्य"
+bubble.qbubbles.shotspdstate.name: "तेजी से शूटिंग"
+bubble.qbubbles.double_value.name: "दोहरा मूल्य"
+bubble.qbubbles.triple_value.name: "ट्रिपल मूल्य"
+bubble.qbubbles.double_state.name: "दोहरी अवस्था"
+bubble.qbubbles.triple_state.name: "ट्रिपल स्टेट"
+bubble.qbubbles.stonebubble.name: "पत्थर का बुलबुला"
+bubble.qbubbles.specialkey.name: "अल्ट्रा मोड"
+bubble.qbubbles.slowmotion.name: "धीमी गति"
+bubble.qbubbles.energy_bubble.name: "टेलीपोर्टर"
+bubble.qbubbles.confusion.name: "भ्रम की स्थिति"
+bubble.qbubbles.timebreak.name: "बबल फ्रीज"
+bubble.qbubbles.hypermode.name: "हाइपर मोड"
+bubble.qbubbles.levelkey.name: "स्तर की"
+bubble.qbubbles.ultimate.name: "विशेष बबल"
+bubble.qbubbles.paralyse.name: "पंगु बना"
+bubble.qbubbles.notouch.name: "गोस्ट मोड"
+bubble.qbubbles.present.name: "उपहार"
+bubble.qbubbles.protect.name: "सुरक्षा"
+bubble.qbubbles.diamond.name: "हीरा"
+bubble.qbubbles.coin.name: "सिक्का"
+
+# Effects
+effect.qbubbles.score_multiplier.name: "मल्टी स्कोर"
+effect.qbubbles.speedboost.name: "त्वरण"
+
+# Popups
+popup.levelup: "स्तर "
+
+# Infos
+info.state.slowmotion: "धीमी गति"
+info.state.shotspeed: "बारूद की गति"
+info.state.confusion: "भ्रम की स्थिति"
+info.state.timebreak: "समय ब्रेक"
+info.state.spdboost: "टर्बो"
+info.state.protect: "ढाल राज्य"
+info.state.notouch: "गोस्ट मोड"
+info.state.paralyse: "पंगु बना"
+info.state.score: "स्कोर स्टेट"
+info.diamonds: "हीरा"
+info.coins: "सिक्के"
+info.lives: "रहता है"
+info.score: "स्कोर"
+info.level: "स्तर"
+info.tps: "टेलीपोर्ट"
