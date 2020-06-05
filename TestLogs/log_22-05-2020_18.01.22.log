@@ -1,0 +1,26 @@
+[22-05-2020 18:01:22] [INFO] [LanguageGenerator]: Generate language id nl, name: Dutch
+[22-05-2020 18:01:23] [INFO] [LanguageGenerator]: Lang [nl]: Translating key: store
+[22-05-2020 18:01:23] [INFO] [LanguageGenerator]: Lang [nl]: Translating key: store.diamonds
+[22-05-2020 18:01:23] [INFO] [LanguageGenerator]: Lang [nl]: Translating key: store.coins
+[22-05-2020 18:01:23] [INFO] [LanguageGenerator]: Lang [nl]: Translating key: gamemap.classic_map.name
+[22-05-2020 18:01:23] [INFO] [LanguageGenerator]: Lang [nl]: Translating key: home.start
+[22-05-2020 18:01:23] [INFO] [LanguageGenerator]: Lang [nl]: Translating key: home.quit
+[22-05-2020 18:01:24] [INFO] [LanguageGenerator]: Lang [nl]: Translating key: home.options
+[22-05-2020 18:01:24] [INFO] [LanguageGenerator]: Lang [nl]: Translating key: pause.back-to-home
+[22-05-2020 18:01:24] [INFO] [LanguageGenerator]: Lang [nl]: Translating key: gui.qbubbles.generic.yes
+[22-05-2020 18:01:25] [INFO] [LanguageGenerator]: Lang [nl]: Translating key: gui.qbubbles.generic.no
+[22-05-2020 18:01:25] [INFO] [LanguageGenerator]: Lang [nl]: Translating key: gui.qbubbles.generic.ok
+[22-05-2020 18:01:25] [INFO] [LanguageGenerator]: Lang [nl]: Translating key: gui.qbubbles.generic.cancel
+[22-05-2020 18:01:25] [INFO] [LanguageGenerator]: Lang [nl]: Translating key: gui.qbubbles.slotsmenu.rename.name
+[22-05-2020 18:01:25] [INFO] [LanguageGenerator]: Lang [nl]: Translating key: gui.qbubbles.slotsmenu.rename.title
+[22-05-2020 18:01:26] [INFO] [LanguageGenerator]: Lang [nl]: Translating key: gui.qbubbles.slotsmenu.rename.savename
+[22-05-2020 18:01:26] [INFO] [LanguageGenerator]: Lang [nl]: Translating key: gui.qbubbles.slotsmenu.remove.name
+[22-05-2020 18:01:26] [INFO] [LanguageGenerator]: Lang [nl]: Translating key: gui.qbubbles.slotsmenu.remove.title
+[22-05-2020 18:01:26] [INFO] [LanguageGenerator]: Lang [nl]: Translating key: gui.qbubbles.slotsmenu.remove.subtitle0
+[22-05-2020 18:01:26] [INFO] [LanguageGenerator]: Lang [nl]: Translating key: gui.qbubbles.slotsmenu.remove.subtitle1
+[22-05-2020 18:01:26] [INFO] [LanguageGenerator]: Lang [nl]: Translating key: gui.qbubbles.slotsmenu.remove.subtitle2
+[22-05-2020 18:01:27] [INFO] [LanguageGenerator]: Lang [nl]: Translating key: gui.qbubbles.slotsmenu.reset.name
+[22-05-2020 18:01:27] [INFO] [LanguageGenerator]: Lang [nl]: Translating key: gui.qbubbles.slotsmenu.reset.title
+[22-05-2020 18:01:27] [INFO] [LanguageGenerator]: Lang [nl]: Translating key: gui.qbubbles.slotsmenu.back.name
+[22-05-2020 18:01:27] [INFO] [LanguageGenerator]: Lang [nl]: Translating key: gui.qbubbles.slotsmenu.open.name
+[22-05-2020 18:01:28] [INFO] [LanguageGenerator]: Lang [nl]: Translating key: gui.qbubbles.slotsmenu.add.name
