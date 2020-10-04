@@ -41,7 +41,7 @@ class Bubble(object):
             raise UnlocalizedNameError(f"Invalid start character '{name[-1]}' for unlocalized name '{name}'")
 
         self._uName = name
-
+        
     def get_uname(self) -> str:
         return self._uName
 

@@ -4,6 +4,7 @@ from random import Random
 from tkinter import Canvas, TclError
 from typing import Dict, Tuple, Optional, List, Callable, Any
 
+# noinspection Mypy
 import dill
 
 from qbubbles.advUtils.time import TimeLength
@@ -22,6 +23,7 @@ from qbubbles.utils import Font
 import qbubbles.gameIO as _gameIO
 
 
+# noinspection PyPackageRequirements
 class GameMap(object):
     def __init__(self):
         self._bubbles = []
@@ -212,7 +214,7 @@ class ClassicMap(GameMap):
 
         self._pause = False
         self.set_uname("qbubbles:classic_map")
-        self.maxBubbles = 100
+        self.maxBubbles = 200
         self.texts = {}
         self.panelTop: Optional[CPanel] = None
         self.tSpecialColor = "#ffffff"
